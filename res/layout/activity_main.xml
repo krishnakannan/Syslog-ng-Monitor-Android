@@ -5,8 +5,50 @@
     tools:context="${relativePackage}.${activityClass}" >
 
     <TextView
+        android:id="@+id/main_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="62dp"
+        android:text="@string/main_title" />
+
+    <EditText
+        android:id="@+id/instance_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:ems="10" 
+        android:singleLine="true"
+        android:imeOptions="actionNext"
+        android:layout_marginTop="40dp"
+        android:hint="@string/host_hint">
+		
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/port_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/instance_input"
+        android:layout_centerHorizontal="true"
+        android:singleLine="true"
+        android:imeOptions="actionNext"
+        android:layout_marginTop="40dp"
+        android:hint="@string/port_hint"
+        android:ems="10" />
+    
+    <Button
+        android:id="@+id/add_instance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:text="@string/add_instance" />
+
+    
 
 </RelativeLayout>

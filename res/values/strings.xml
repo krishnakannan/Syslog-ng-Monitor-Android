@@ -3,5 +3,15 @@
 
     <string name="app_name">Syslog-ng-Monitor-Android</string>
     <string name="hello_world">Hello world!</string>
+    <string name="main_title">Enter the Instance details</string>
+    <string name="add_instance">Connect</string>
+    <string name="host_hint">Enter Host</string>
+    <string name="port_hint">Enter Port</string>
+    <string name="empty_text"></string>
+    <string name="stats">stats</string>
+    <string name="is_alive">is_alive</string>
+    <string name="show_config">show_config</string>    
+    <string name="msgwindow_close_button">Close</string>
+    <string name="title_activity_temp_connector">TempConnector</string>
 
 </resources>
