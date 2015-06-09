@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class TempMainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
