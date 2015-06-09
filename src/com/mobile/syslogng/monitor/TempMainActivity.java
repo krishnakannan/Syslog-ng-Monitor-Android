@@ -16,7 +16,7 @@ public class TempMainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_temp_main);
 		
 		
 		//Hide activity name on ActionBar
