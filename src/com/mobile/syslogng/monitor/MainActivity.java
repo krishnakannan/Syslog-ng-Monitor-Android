@@ -127,15 +127,32 @@ public class MainActivity extends Activity {
 
 	private void selectItem(int position) {
 		
-		
-		Fragment fragment = new HomeFragment();
+		Integer caseNumber = position+1;
+		Fragment fragment;
 		Bundle args = new Bundle();
-		args.putInt(HomeFragment.ACTIONBAR_TITLE, position);
-		fragment.setArguments(args);
-
 		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
-
+		
+		switch(caseNumber)
+		{
+			case 1:
+				fragment = new HomeFragment();
+				args.putInt(HomeFragment.ACTIONBAR_TITLE, position);
+				fragment.setArguments(args);
+				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+				break;
+			
+			case 2:
+				fragment = new AddInstanceFragment();
+				args.putInt(AddInstanceFragment.ACTIONBAR_TITLE, position);
+				fragment.setArguments(args);
+				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+				break;
+			
+			default:
+				break;
+		}
+		
+		
 		// update selected item and title, then close the drawer
 		mDrawerList.setItemChecked(position, true);
 		setTitle(menuItems[position]);

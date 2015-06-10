@@ -2,28 +2,34 @@
 <resources>
 
     <string name="app_name">Syslog-ng-Monitor-Android</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="main_title">Enter the Instance details</string>
-    <string name="add_instance">Connect</string>
+    
+    <string name="add_instance_title">Enter the Instance details</string>
+    <string name="add_instance">Add Instance</string>
+    <string name="add_instances">Add Instances</string>
+    
     <string name="host_hint">Enter Host</string>
     <string name="port_hint">Enter Port</string>
     <string name="empty_text"></string>
+    
     <string name="stats">stats</string>
     <string name="is_alive">is_alive</string>
     <string name="show_config">show_config</string>
+    
     <string name="msgwindow_close_button">Close</string>
     <string name="title_activity_temp_connector">TempConnector</string>
     <string name="title_activity_main">MainActivity</string>
+    
     <string name="home">Welcome to Syslog-ng Monitor application \n Start monitoring by adding the instances. </string>
-    <string name="add_instances">Add Instances</string>
     <string name="view_instances">View Instances</string>
     <string name="about">About</string>
+    
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Example action</string>
-    <string name="action_settings">Settings</string>
+
+	
 	<string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    
     <string name="tbi">To be implemented</string>
     
     <string-array name="menu_array">
