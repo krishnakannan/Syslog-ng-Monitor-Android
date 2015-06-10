@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+
 
 public class HomeFragment extends Fragment {
-    public static final String ARG_PLANET_NUMBER = "planet_number";
+    public static final String ACTIONBAR_TITLE = "menu_title";
 
     public HomeFragment() {
         // Empty constructor required for fragment subclasses
@@ -20,13 +20,10 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        int i = getArguments().getInt(ARG_PLANET_NUMBER);
-        String planet = getResources().getStringArray(R.array.menu_array)[i];
-
-        int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
-                        "drawable", getActivity().getPackageName());
+        int i = getArguments().getInt(ACTIONBAR_TITLE);
+        String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i];
        
-        getActivity().setTitle(planet);
+        getActivity().setTitle(actionbarTitle);
         return rootView;
     }
 }

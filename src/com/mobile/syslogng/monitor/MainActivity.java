@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
+	private static final String APP_NAME = "Syslog-ng Monitor";
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -42,7 +43,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mTitle = mDrawerTitle = getTitle();
+		mTitle  = getTitle();
+		mDrawerTitle = APP_NAME;
 		menuItems = getResources().getStringArray(R.array.menu_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -124,10 +126,11 @@ public class MainActivity extends Activity {
 	}
 
 	private void selectItem(int position) {
-		// update the main content by replacing fragments
+		
+		
 		Fragment fragment = new HomeFragment();
 		Bundle args = new Bundle();
-		args.putInt(HomeFragment.ARG_PLANET_NUMBER, position);
+		args.putInt(HomeFragment.ACTIONBAR_TITLE, position);
 		fragment.setArguments(args);
 
 		FragmentManager fragmentManager = getFragmentManager();
@@ -164,8 +167,6 @@ public class MainActivity extends Activity {
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
-	/**
-	 * Fragment that appears in the "content_frame", shows a planet
-	 */
+	
 
 }
