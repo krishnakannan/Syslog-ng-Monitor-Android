@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
 			SQLiteDatabase instanceDb = openOrCreateDatabase("instances.db",SQLiteDatabase.CREATE_IF_NECESSARY, null);
 			
 			instanceDb.execSQL("DROP TABLE IF EXISTS" + " INSTANCE_TABLE"); // Please Remove it during Production
-			instanceDb.execSQL("CREATE TABLE if not exists INSTANCE_TABLE(INSTANCE_NAME TEXT, INSTANCE_HOSTNAME TEXT, PORT_NUMBER INTEGER)");
+			instanceDb.execSQL("CREATE TABLE if not exists INSTANCE_TABLE(_id INTEGER PRIMARY KEY, INSTANCE_NAME TEXT, INSTANCE_HOSTNAME TEXT, PORT_NUMBER INTEGER)");
 			
 			
 			preference.edit().putBoolean("firstRun", false).commit();

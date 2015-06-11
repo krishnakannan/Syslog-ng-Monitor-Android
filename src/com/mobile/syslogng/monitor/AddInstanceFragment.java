@@ -48,11 +48,16 @@ public class AddInstanceFragment extends Fragment {
 		        hostName = editTextHostName.getText().toString();
 		        portNumber = Integer.parseInt(editTextPortNumber.getText().toString());
 		        
-		        SaveInstanceIntoDb saveInstance = new SaveInstanceIntoDb(getActivity().getApplicationContext(),instanceName, hostName, portNumber);
+		        AddInstanceIntoDb saveInstance = new AddInstanceIntoDb(getActivity().getApplicationContext(),instanceName, hostName, portNumber);
 		        insertStatus = saveInstance.insert();
 		        
 		        if(insertStatus){
+		        	
+		        	editTextInstanceName.setText("");
+		        	editTextHostName.setText("");
+		        	editTextPortNumber.setText("");
 		        	Toast.makeText(getActivity().getApplicationContext(), "Instance successfully added into Database" , Toast.LENGTH_LONG).show();
+		        	
 		        }
 		        else{
 		        	Toast.makeText(getActivity().getApplicationContext(), "There was a problem occured in adding Instance" , Toast.LENGTH_LONG).show();

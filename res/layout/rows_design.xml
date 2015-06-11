@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <TextView 
+    android:id="@+id/textview_instance_name"
+    android:textSize="22sp"
+    android:textColor="@color/black"
+    android:textStyle="italic"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="2dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:background="@color/transparent_grey"
+    />
+<TextView 
+    android:id="@+id/textview_hostname"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:lines="2"
+    android:paddingTop="40dp"
+    android:paddingBottom="5dp"
+    android:textColor="@color/black"
+    android:textSize="13sp" 
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:background="@color/transparent_grey"
+></TextView>
+<TextView 
+    android:id="@+id/textview_portnumber"
+    android:textColor="@color/black"
+    android:textStyle="italic"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="80dip"
+    android:paddingBottom="5dip"
+    android:textSize="12sp" 
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:background="@color/transparent_grey"
+
+></TextView>
+
+</RelativeLayout>
