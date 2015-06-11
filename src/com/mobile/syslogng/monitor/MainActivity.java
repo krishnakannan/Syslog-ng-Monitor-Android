@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
 			SQLiteDatabase instanceDb = openOrCreateDatabase("instances.db",SQLiteDatabase.CREATE_IF_NECESSARY, null);
 			
 			instanceDb.execSQL("DROP TABLE IF EXISTS" + " INSTANCE_TABLE"); // Please Remove it during Production
-			instanceDb.execSQL("CREATE TABLE if not exists INSTANCE_TABLE(_id INTEGER PRIMARY KEY, INSTANCE_NAME TEXT, INSTANCE_HOSTNAME TEXT, PORT_NUMBER INTEGER)");
+			instanceDb.execSQL("CREATE TABLE if not exists INSTANCE_TABLE(_id INTEGER PRIMARY KEY, INSTANCE_NAME TEXT, INSTANCE_HOSTNAME TEXT, PORT_NUMBER TEXT)");
 			
 			
 			preference.edit().putBoolean("firstRun", false).commit();
@@ -167,6 +167,13 @@ public class MainActivity extends Activity {
 			case 2:
 				fragment = new AddInstanceFragment();
 				args.putInt(AddInstanceFragment.ACTIONBAR_TITLE, position);
+				fragment.setArguments(args);
+				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+				break;
+				
+			case 3:
+				fragment = new ViewInstanceFragment(getApplicationContext());
+				args.putInt(ViewInstanceFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 				break;

@@ -42,11 +42,11 @@ public class AddInstanceFragment extends Fragment {
 				
 				String instanceName;
 		        String hostName;
-		        Integer portNumber;
+		        String portNumber;
 		        
 		        instanceName = editTextInstanceName.getText().toString();
 		        hostName = editTextHostName.getText().toString();
-		        portNumber = Integer.parseInt(editTextPortNumber.getText().toString());
+		        portNumber = editTextPortNumber.getText().toString();
 		        
 		        AddInstanceIntoDb saveInstance = new AddInstanceIntoDb(getActivity().getApplicationContext(),instanceName, hostName, portNumber);
 		        insertStatus = saveInstance.insert();

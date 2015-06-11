@@ -9,7 +9,7 @@ public class AddInstanceIntoDb {
 	private Context context;
 	private String instanceName;
 	private String hostName;
-	private Integer portNumber;
+	private String portNumber;
 	
 	public AddInstanceIntoDb(){
 		/*
@@ -17,7 +17,7 @@ public class AddInstanceIntoDb {
 		 */
 	}
 	
-	public AddInstanceIntoDb(Context context, String instanceName, String hostName, Integer portNumber){
+	public AddInstanceIntoDb(Context context, String instanceName, String hostName, String portNumber){
 		this.context = context;
 		this.instanceName = instanceName;
 		this.hostName = hostName;
