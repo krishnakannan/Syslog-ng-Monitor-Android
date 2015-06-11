@@ -8,7 +8,9 @@ import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -34,6 +36,7 @@ public class MainActivity extends Activity {
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 
+	private SharedPreferences preference = null;
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 	private String[] menuItems;
@@ -43,6 +46,26 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		/*
+		 * 
+		 * Setting Shared Preferences for Identifying First run of the application 
+		 * and creating Database
+		 * 
+		 */
+		
+		preference = getSharedPreferences("com.mobile.syslogng.monitor",MODE_PRIVATE);
+		
+		if(preference.getBoolean("firstRun",true))
+		{
+			SQLiteDatabase instanceDb = openOrCreateDatabase("instances.db",SQLiteDatabase.CREATE_IF_NECESSARY, null);
+			
+			instanceDb.execSQL("DROP TABLE IF EXISTS" + " INSTANCE_TABLE"); // Please Remove it during Production
+			instanceDb.execSQL("CREATE TABLE if not exists INSTANCE_TABLE(INSTANCE_NAME TEXT, INSTANCE_HOSTNAME TEXT, PORT_NUMBER INTEGER)");
+			
+			
+			preference.edit().putBoolean("firstRun", false).commit();
+		}
+		
 		mTitle  = getTitle();
 		mDrawerTitle = APP_NAME;
 		menuItems = getResources().getStringArray(R.array.menu_array);

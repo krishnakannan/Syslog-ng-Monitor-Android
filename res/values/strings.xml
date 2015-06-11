@@ -3,12 +3,13 @@
 
     <string name="app_name">Syslog-ng-Monitor-Android</string>
     
-    <string name="add_instance_title">Enter the Instance details</string>
+    <string name="add_instance_title">Enter the server details you want to save and connect</string>
     <string name="add_instance">Add Instance</string>
     <string name="add_instances">Add Instances</string>
     
-    <string name="host_hint">Enter Host</string>
-    <string name="port_hint">Enter Port</string>
+    <string name="host_hint">Enter Hostname</string>
+    <string name="port_hint">Enter Port Number</string>
+    <string name="instance_name_hint">Enter Instance Name</string>
     <string name="empty_text"></string>
     
     <string name="stats">stats</string>

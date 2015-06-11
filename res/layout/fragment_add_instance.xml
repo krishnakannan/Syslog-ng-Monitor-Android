@@ -14,7 +14,19 @@
         android:text="@string/add_instance_title" />
 
     <EditText
-        android:id="@+id/instance_input"
+        android:id="@+id/et_instance_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/et_host_name"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:singleLine="true"
+        android:imeOptions="actionNext"
+        android:layout_marginTop="40dp" 
+        android:hint="@string/instance_name_hint"/>
+    
+    <EditText
+        android:id="@+id/et_host_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -29,19 +41,20 @@
     </EditText>
 
     <EditText
-        android:id="@+id/port_input"
+        android:id="@+id/et_port_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/instance_input"
+        android:layout_below="@+id/et_host_name"
         android:layout_centerHorizontal="true"
         android:singleLine="true"
+        android:inputType="numberSigned"
         android:imeOptions="actionNext"
         android:layout_marginTop="40dp"
         android:hint="@string/port_hint"
         android:ems="10" />
     
     <Button
-        android:id="@+id/add_instance"
+        android:id="@+id/btn_add_instance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
