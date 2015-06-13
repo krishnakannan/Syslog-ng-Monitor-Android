@@ -7,7 +7,6 @@
     android:id="@+id/textview_instance_name"
     android:textSize="22sp"
     android:textColor="@color/black"
-    android:textStyle="italic"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:paddingTop="2dp"
@@ -26,7 +25,7 @@
     android:textSize="13sp" 
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
-    android:background="@color/transparent_grey"
+    android:background="@color/full_transparent"
 ></TextView>
 <TextView 
     android:id="@+id/textview_portnumber"

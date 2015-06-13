@@ -32,6 +32,8 @@
     <string name="drawer_close">Close navigation drawer</string>
     
     <string name="tbi">To be implemented</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
     
     <string-array name="menu_array">
         <item>Home</item>
