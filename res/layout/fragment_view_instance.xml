@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/lighit_transparent_grey"
+    >
     
 	 <ListView 
             android:id="@+id/listview_view_instance"
@@ -10,14 +12,15 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:divider="@color/white"
+            android:divider="@color/full_transparent"
             android:dividerHeight="8dp" 
-            android:background="@color/white"
+            android:background="@color/full_transparent"
             android:layout_marginLeft="11dp"
             android:layout_marginTop="7dp"
             android:layout_marginRight="11dp"
             android:layout_marginBottom="7dp"
             android:clickable="true"
+            
             >
 
         </ListView>

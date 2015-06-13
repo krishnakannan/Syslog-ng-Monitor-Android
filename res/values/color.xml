@@ -11,6 +11,9 @@
     
      <color name="full_transparent">#00ffffff</color>
      <color name="transparent_grey">#11000000</color>
-   
+     <color name="lighit_transparent_grey">#11808080</color>
+     <color name="darker_grey">#22000000</color>
+     <color name="transparent_color">#22333333</color>
+   	
     
 </resources>
