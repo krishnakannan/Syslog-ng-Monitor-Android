@@ -163,15 +163,22 @@ public class MainActivity extends Activity {
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 				break;
-			
+				
 			case 2:
-				fragment = new AddInstanceFragment();
+				fragment = new RunCommandFragment();
 				args.putInt(AddInstanceFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 				break;
 				
 			case 3:
+				fragment = new AddInstanceFragment();
+				args.putInt(AddInstanceFragment.ACTIONBAR_TITLE, position);
+				fragment.setArguments(args);
+				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+				break;
+				
+			case 4:
 				fragment = new ViewInstanceFragment(getApplicationContext());
 				args.putInt(ViewInstanceFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);

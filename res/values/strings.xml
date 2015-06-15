@@ -6,6 +6,7 @@
     <string name="add_instance_title">Enter the server details you want to save and connect</string>
     <string name="add_instance">Add Instance</string>
     <string name="add_instances">Add Instances</string>
+    <string name="select_command">Select Command</string>
     
     <string name="host_hint">Enter Hostname</string>
     <string name="port_hint">Enter Port Number</string>
@@ -37,6 +38,7 @@
     
     <string-array name="menu_array">
         <item>Home</item>
+        <item>Run Command</item>
         <item>Add new Instance</item>
         <item>Saved Instances</item>
         <item>About</item>

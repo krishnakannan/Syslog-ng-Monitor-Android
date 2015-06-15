@@ -16,14 +16,14 @@ public class TempMainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_temp_main);
+		setContentView(R.layout.fragment_run_command);
 		
 		
 		//Hide activity name on ActionBar
 		getActionBar().setDisplayShowTitleEnabled(false);
 		
 		//Collect the Instance Details
-		final Button button = (Button) findViewById(R.id.add_instance);
+		final Button button = (Button) findViewById(R.id.btn_add_instance);
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				
@@ -33,8 +33,8 @@ public class TempMainActivity extends Activity {
 				EditText instanceText;
 				EditText portText;
 				
-				instanceText = (EditText) findViewById(R.id.instance_input);
-				portText = (EditText) findViewById(R.id.port_input);
+				instanceText = (EditText) findViewById(R.id.et_instance_input);
+				portText = (EditText) findViewById(R.id.et_port_input);
 				tempConnect = new Intent(getApplicationContext(), TempConnector.class);
 				
 				instanceDetails = instanceText.getText().toString();

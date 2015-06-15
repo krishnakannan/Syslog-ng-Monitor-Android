@@ -32,7 +32,7 @@ import android.widget.Toast;
 import android.widget.AbsListView.MultiChoiceModeListener;
 
 
-public class ViewInstanceFragment extends Fragment implements MultiChoiceModeListener{
+public class ViewInstanceFragment extends Fragment{
 
 	public static final String ACTIONBAR_TITLE = "menu_title";
 
@@ -81,7 +81,67 @@ public class ViewInstanceFragment extends Fragment implements MultiChoiceModeLis
         
         
         this.listViewInstances.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        this.listViewInstances.setMultiChoiceModeListener(this);
+        this.listViewInstances.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+        	
+        	@Override
+        	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        		MenuInflater inflater = mode.getMenuInflater();
+        	        inflater.inflate(R.menu.context_menu, menu);
+        	       
+        	        return true;
+        	}
+
+
+        	@Override
+        	public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        		// TODO Auto-generated method stub
+        		return false;
+        	}
+
+
+        	@Override
+        	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        		//Responds to clicked item.
+        		switch (item.getItemId()) {
+        		
+        			case R.id.delete_list_item:
+        				Toast.makeText(context, "delete", Toast.LENGTH_LONG).show();
+        				break;
+        			case R.id.edit_list_item:
+        				Toast.makeText(context, "edit", Toast.LENGTH_LONG).show();
+        				break;
+        		
+        		}
+        		
+        		return false;
+        	}
+
+
+        	@Override
+        	public void onDestroyActionMode(ActionMode mode) {
+        		// TODO Auto-generated method stub
+        		listViewInstances.setActivated(false);
+        	}
+
+
+        	
+        	@Override
+        	public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+        		if(checked == true){
+        			
+        			
+        			listViewInstances.getChildAt(position).setActivated(true);
+        			
+        		}
+        		else if(checked == false){
+        			
+        			listViewInstances.getChildAt(position).setActivated(false);
+
+        		}
+        		
+        	}
+        	
+        });
         return rootView;
     }
     
@@ -92,62 +152,6 @@ public class ViewInstanceFragment extends Fragment implements MultiChoiceModeLis
     }
 
 
-	@Override
-	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-		MenuInflater inflater = mode.getMenuInflater();
-	        inflater.inflate(R.menu.context_menu, menu);
-	       
-	        return true;
-	}
-
-
-	@Override
-	public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-		//Responds to clicked item.
-		switch (item.getItemId()) {
-		
-			case R.id.delete_list_item:
-				Toast.makeText(context, "delete", Toast.LENGTH_LONG).show();
-				break;
-			case R.id.edit_list_item:
-				Toast.makeText(context, "edit", Toast.LENGTH_LONG).show();
-				break;
-		
-		}
-		
-		return false;
-	}
-
-
-	@Override
-	public void onDestroyActionMode(ActionMode mode) {
-		// TODO Auto-generated method stub
-		listViewInstances.setActivated(false);
-	}
-
-
 	
-	@Override
-	public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-		if(checked == true){
-			
-			
-			listViewInstances.getChildAt(position).setActivated(true);
-			
-		}
-		else if(checked == false){
-			
-			listViewInstances.getChildAt(position).setActivated(false);
-
-		}
-		
-	}
 
 }
