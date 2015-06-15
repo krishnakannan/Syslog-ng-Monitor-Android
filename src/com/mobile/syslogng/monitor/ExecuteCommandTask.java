@@ -37,6 +37,7 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 	private StringBuilder sBuilder = null;
 	private BufferedReader in;
 	private String line;
+	private Boolean isException = false;
 	
 	
 	public ExecuteCommandTask(){
@@ -120,9 +121,10 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 		}
 		catch(Exception e)
 		{
+			isException = true;
 			Log.e("ExecuteCommand Error", e.toString());
 			Log.e("ExecuteCommand Error", e.getMessage());
-			result = "Exception";
+			result = e.getMessage();
 		}
 		finally
 		{
@@ -141,7 +143,9 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 				sBuilder = null;
 				
 			} catch (IOException e) {
+				isException = true;
 				e.printStackTrace();
+				result = e.getMessage();
 			}
 			
 		}
@@ -153,7 +157,7 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 	@Override
 	protected void onPostExecute(String result) {
 		super.onPostExecute(result);
-			callBack.commandExecutionEnd(result);
+			callBack.commandExecutionEnd(result, isException);
      }
 
 }

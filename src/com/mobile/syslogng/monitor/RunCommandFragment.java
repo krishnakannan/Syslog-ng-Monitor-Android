@@ -1,7 +1,9 @@
 package com.mobile.syslogng.monitor;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -143,11 +145,7 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 		
 	}
 
-	public void callExecuteCommandTask(){
-		
-		ExecuteCommandTask executeCommandTask = new ExecuteCommandTask(this, getActivity().getApplicationContext(), instanceString, portNumber, command);
-		executeCommandTask.execute();
-	}
+	
 	
 	@Override
 	public void commandExecutionStart() {
@@ -160,14 +158,38 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 	}
 
 	@Override
-	public void commandExecutionEnd(String result) {
-		
+	public void commandExecutionEnd(String result, Boolean isException) {
+		if(isException){
+			showError(result);
+		}
 		titleTV.setVisibility(View.VISIBLE);
 		selectCommand.setVisibility(View.VISIBLE);
 		selectCommandTV.setVisibility(View.VISIBLE);
 		instanceText.setVisibility(View.VISIBLE);
 		portText.setVisibility(View.VISIBLE);
 		progressBar.setVisibility(View.INVISIBLE);
+	}
+	
+	//Method for execute the command
+	
+	public void callExecuteCommandTask(){
+		
+		ExecuteCommandTask executeCommandTask = new ExecuteCommandTask(this, getActivity().getApplicationContext(), instanceString, portNumber, command);
+		executeCommandTask.execute();
+	}
+	
+	//Method for displaying Error / Exception
+	
+	public void showError(String message){
+		new AlertDialog.Builder(getActivity())
+	    .setTitle("Error")
+	    .setMessage(message)
+	    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	            // continue with delete
+	        }
+	     }).setIcon(android.R.drawable.ic_dialog_alert)
+	     .show();
 	}
 
 }
