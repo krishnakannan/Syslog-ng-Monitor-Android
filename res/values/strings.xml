@@ -2,41 +2,33 @@
 <resources>
 
     <string name="app_name">Syslog-ng-Monitor-Android</string>
-    
     <string name="add_instance_title">Enter the server details you want to save and connect</string>
     <string name="add_instance">Add Instance</string>
     <string name="add_instances">Add Instances</string>
     <string name="select_command">Select Command</string>
     <string name="run_command">Run Command</string>
-    
     <string name="host_hint">Enter Hostname</string>
     <string name="port_hint">Enter Port Number</string>
     <string name="instance_name_hint">Enter Instance Name</string>
     <string name="empty_text"></string>
-    
     <string name="stats">stats</string>
     <string name="is_alive">is_alive</string>
     <string name="show_config">show_config</string>
-    
     <string name="msgwindow_close_button">Close</string>
     <string name="title_activity_temp_connector">TempConnector</string>
     <string name="title_activity_main">MainActivity</string>
-    
     <string name="home">Welcome to Syslog-ng Monitor application \n Start monitoring by adding the instances. </string>
     <string name="view_instances">View Instances</string>
     <string name="about">About</string>
-    
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
-	
-	<string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    
     <string name="tbi">To be implemented</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
-    
+    <string name="result">Results</string>
+
     <string-array name="menu_array">
         <item>Home</item>
         <item>Run Command</item>
@@ -44,11 +36,13 @@
         <item>Saved Instances</item>
         <item>About</item>
     </string-array>
-    
     <string-array name="command_array">
         <item>stats</item>
         <item>is_alive</item>
         <item>show_config</item>
     </string-array>
-    
+
+    <string name="title_activity_result">ResultActivity</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>

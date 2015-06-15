@@ -159,15 +159,22 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 
 	@Override
 	public void commandExecutionEnd(String result, Boolean isException) {
-		if(isException){
-			showError(result);
-		}
 		titleTV.setVisibility(View.VISIBLE);
 		selectCommand.setVisibility(View.VISIBLE);
 		selectCommandTV.setVisibility(View.VISIBLE);
 		instanceText.setVisibility(View.VISIBLE);
 		portText.setVisibility(View.VISIBLE);
 		progressBar.setVisibility(View.INVISIBLE);
+		
+		if(isException){
+			showError(result);
+		}
+		else{
+			Intent resultIntent = new Intent(context, ResultActivity.class);
+			resultIntent.putExtra("Result", result);
+			startActivity(resultIntent);
+		}
+		
 	}
 	
 	//Method for execute the command

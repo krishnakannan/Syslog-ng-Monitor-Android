@@ -32,7 +32,11 @@
         <activity
             android:name=".TempMainActivity"
             android:label="@string/title_activity_main" >
-           </activity>
+        </activity>
+        <activity
+            android:name=".ResultActivity"
+            android:label="@string/title_activity_result" >
+        </activity>
     </application>
 
 </manifest>
