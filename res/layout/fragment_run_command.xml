@@ -4,8 +4,15 @@
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
 
+    <ProgressBar
+        android:id="@+id/progressbar_runcommand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+    
     <TextView
-        android:id="@+id/tv_main_title"
+        android:id="@+id/textview_main_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -35,7 +42,7 @@
         android:id="@+id/et_port_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/tv_select_command"
+        android:layout_above="@+id/textview_select_command"
         android:layout_marginBottom="32dp"
         android:layout_centerHorizontal="true"
         android:ems="10"
@@ -54,7 +61,7 @@
         android:layout_alignEnd="@+id/et_port_input"
         android:layout_alignLeft="@+id/et_port_input"
         android:layout_alignRight="@+id/et_port_input"
-        android:layout_below="@+id/tv_select_command"
+        android:layout_below="@+id/textview_select_command"
         android:layout_marginTop="32dp" />
 
     
@@ -69,7 +76,7 @@
         android:text="@string/run_command" />
 
     <TextView
-        android:id="@+id/tv_select_command"
+        android:id="@+id/textview_select_command"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

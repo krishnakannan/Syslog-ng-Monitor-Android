@@ -13,7 +13,9 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class RunCommandFragment extends Fragment implements IExecuteCommandCallBack{
@@ -24,7 +26,20 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 	
 	private Spinner selectCommand;
 	
+	private EditText instanceText;
+	private EditText portText;
+	
+	private TextView titleTV;
+	private TextView selectCommandTV;
+	
+	private Button runCommandBtn;
+	
+	private ProgressBar progressBar;
+	
 	private String command = "EMPTY";
+	private String instanceString;
+	private String portString;
+	private Integer portNumber;
 	
 	public RunCommandFragment(){
 		
@@ -41,6 +56,13 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
         int i = getArguments().getInt(ACTIONBAR_TITLE);
         String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i];
        
+        titleTV = (TextView) rootView.findViewById(R.id.textview_main_title);
+        selectCommandTV = (TextView) rootView.findViewById(R.id.textview_select_command);
+        
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressbar_runcommand);
+        
+        progressBar.setVisibility(View.INVISIBLE);
+        
         selectCommand = (Spinner) rootView.findViewById(R.id.spinner_command);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
 		        R.array.command_array, android.R.layout.simple_spinner_item);
@@ -56,23 +78,14 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
 		
-		final Button button = (Button) getActivity().findViewById(R.id.btn_run_command);
-		button.setOnClickListener(new View.OnClickListener() {
+		runCommandBtn = (Button) getActivity().findViewById(R.id.btn_run_command);
+		runCommandBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				
-				String instanceString;
-				String portString;
-				Integer portNumber;
-				Intent tempConnect;
-				EditText instanceText;
-				EditText portText;
-				
-				
 				instanceText = (EditText) getActivity().findViewById(R.id.et_instance_input);
 				portText = (EditText) getActivity().findViewById(R.id.et_port_input);
 				
 				
-				tempConnect = new Intent(getActivity().getApplicationContext(), TempConnector.class);
+				
 				
 				instanceString = instanceText.getText().toString();
 				portString = portText.getText().toString();
@@ -92,10 +105,9 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 					try
 					{
 						portNumber = Integer.parseInt(portString);
-						tempConnect.putExtra("Instance", instanceString);
-						tempConnect.putExtra("Port", portNumber);
+						callExecuteCommandTask();
 						Log.i("Host Instance Details ","URL -  "+ instanceString +" Port - "+ portNumber + "command = "+command);
-						startActivity(tempConnect);
+						
 					}
 					catch(NumberFormatException e)
 					{
@@ -131,16 +143,31 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 		
 	}
 
+	public void callExecuteCommandTask(){
+		
+		ExecuteCommandTask executeCommandTask = new ExecuteCommandTask(this, getActivity().getApplicationContext(), instanceString, portNumber, command);
+		executeCommandTask.execute();
+	}
+	
 	@Override
 	public void commandExecutionStart() {
-		// TODO Auto-generated method stub
-		
+		titleTV.setVisibility(View.INVISIBLE);
+		selectCommand.setVisibility(View.INVISIBLE);
+		selectCommandTV.setVisibility(View.INVISIBLE);
+		instanceText.setVisibility(View.INVISIBLE);
+		portText.setVisibility(View.INVISIBLE);
+		progressBar.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	public void commandExecutionEnd(String result) {
-		// TODO Auto-generated method stub
 		
+		titleTV.setVisibility(View.VISIBLE);
+		selectCommand.setVisibility(View.VISIBLE);
+		selectCommandTV.setVisibility(View.VISIBLE);
+		instanceText.setVisibility(View.VISIBLE);
+		portText.setVisibility(View.VISIBLE);
+		progressBar.setVisibility(View.INVISIBLE);
 	}
 
 }
