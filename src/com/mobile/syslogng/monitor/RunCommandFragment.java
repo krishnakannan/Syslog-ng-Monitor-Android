@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class RunCommandFragment extends Fragment{
+public class RunCommandFragment extends Fragment implements IExecuteCommandCallBack{
 	
 	public static final String ACTIONBAR_TITLE = "menu_title";
 	
@@ -128,6 +128,18 @@ public class RunCommandFragment extends Fragment{
 			}
 			
 		});
+		
+	}
+
+	@Override
+	public void commandExecutionStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void commandExecutionEnd(String result) {
+		// TODO Auto-generated method stub
 		
 	}
 
