@@ -112,12 +112,8 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 			}
 			
 			result = sBuilder.toString();
-			result.replaceAll("null", "");
-//			if(result == null || result.equals(""))
-//			{
-//				result = "Bad Response / No Response";
-//			}
-			
+			result = result.replaceAll("null", "");
+
 		}
 		catch(Exception e)
 		{
