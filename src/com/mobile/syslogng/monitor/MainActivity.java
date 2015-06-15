@@ -165,7 +165,7 @@ public class MainActivity extends Activity {
 				break;
 				
 			case 2:
-				fragment = new RunCommandFragment();
+				fragment = new RunCommandFragment(getApplicationContext());
 				args.putInt(AddInstanceFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();

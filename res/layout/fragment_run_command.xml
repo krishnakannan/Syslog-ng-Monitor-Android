@@ -60,13 +60,13 @@
     
     
     <Button
-        android:id="@+id/btn_add_instance"
+        android:id="@+id/btn_run_command"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="32dp"
-        android:text="@string/add_instance" />
+        android:text="@string/run_command" />
 
     <TextView
         android:id="@+id/tv_select_command"

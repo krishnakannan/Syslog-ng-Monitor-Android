@@ -7,6 +7,7 @@
     <string name="add_instance">Add Instance</string>
     <string name="add_instances">Add Instances</string>
     <string name="select_command">Select Command</string>
+    <string name="run_command">Run Command</string>
     
     <string name="host_hint">Enter Hostname</string>
     <string name="port_hint">Enter Port Number</string>
@@ -43,4 +44,11 @@
         <item>Saved Instances</item>
         <item>About</item>
     </string-array>
+    
+    <string-array name="command_array">
+        <item>stats</item>
+        <item>is_alive</item>
+        <item>show_config</item>
+    </string-array>
+    
 </resources>
