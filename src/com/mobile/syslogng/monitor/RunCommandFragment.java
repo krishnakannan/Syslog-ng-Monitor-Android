@@ -44,21 +44,21 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 	
 	private Context context;
 	
-	private Spinner selectCommand;
+	private Spinner spinnerSelectCommand;
 	
-	private EditText instanceText;
-	private EditText portText;
+	private EditText etInstanceText;
+	private EditText etPortText;
 	
-	private TextView titleTV;
-	private TextView selectCommandTV;
+	private TextView tvTitle;
+	private TextView tvSelectCommand;
 	
-	private Button runCommandBtn;
+	private Button btnRunCommand;
 	
 	private ProgressBar progressBar;
 	
 	private String command = "EMPTY";
 	private String instanceString;
-	private String portString;
+	
 	private Integer portNumber;
 	
 	public RunCommandFragment(){
@@ -76,19 +76,19 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
         int i = getArguments().getInt(ACTIONBAR_TITLE);
         String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i];
        
-        titleTV = (TextView) rootView.findViewById(R.id.textview_main_title);
-        selectCommandTV = (TextView) rootView.findViewById(R.id.textview_select_command);
+        tvTitle = (TextView) rootView.findViewById(R.id.textview_main_title);
+        tvSelectCommand = (TextView) rootView.findViewById(R.id.textview_select_command);
         
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressbar_runcommand);
         
         progressBar.setVisibility(View.INVISIBLE);
         
-        selectCommand = (Spinner) rootView.findViewById(R.id.spinner_command);
+        spinnerSelectCommand = (Spinner) rootView.findViewById(R.id.spinner_command);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
 		        R.array.command_array, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		
-		selectCommand.setAdapter(adapter);
+		spinnerSelectCommand.setAdapter(adapter);
         
         getActivity().setTitle(actionbarTitle);
         return rootView;
@@ -98,30 +98,23 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
 		
-		runCommandBtn = (Button) getActivity().findViewById(R.id.btn_run_command);
-		runCommandBtn.setOnClickListener(new View.OnClickListener() {
+		 
+		
+		btnRunCommand = (Button) getActivity().findViewById(R.id.btn_run_command);
+		btnRunCommand.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				instanceText = (EditText) getActivity().findViewById(R.id.et_instance_input);
-				portText = (EditText) getActivity().findViewById(R.id.et_port_input);
+				etInstanceText = (EditText) getActivity().findViewById(R.id.et_instance_input);
+				etPortText = (EditText) getActivity().findViewById(R.id.et_port_input);
+				
+				String portString;
 				
 				
+				instanceString = etInstanceText.getText().toString();
+				portString = etPortText.getText().toString();
 				
 				
-				instanceString = instanceText.getText().toString();
-				portString = portText.getText().toString();
-				
-				if(instanceString == null || instanceString.equals("") || portString == null || portString.equals(""))
+				if(checkHostValidity(instanceString) && checkPortValidity(portString))
 				{
-					Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Enter valid host/port details", Toast.LENGTH_LONG);
-					toast.show();
-				}
-				else if(command.equals("EMPTY")){
-					Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Input the Command to be executed", Toast.LENGTH_LONG);
-					toast.show();
-				}
-				else
-				{
-					
 					try
 					{
 						portNumber = Integer.parseInt(portString);
@@ -136,16 +129,19 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 					}
 					finally
 					{
-						instanceText.setText("");
-						portText.setText("");
+						etInstanceText.setText("");
+						etPortText.setText("");
 					}
-					
-					
+				}
+				else
+				{
+					Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Enter valid host/port details", Toast.LENGTH_LONG);
+					toast.show();
 				}			
 			}
 		});
 		
-		selectCommand.setOnItemSelectedListener(new OnItemSelectedListener(){
+		spinnerSelectCommand.setOnItemSelectedListener(new OnItemSelectedListener(){
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -167,54 +163,78 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 	
 	@Override
 	public void commandExecutionStart() {
-		titleTV.setVisibility(View.INVISIBLE);
-		selectCommand.setVisibility(View.INVISIBLE);
-		selectCommandTV.setVisibility(View.INVISIBLE);
-		instanceText.setVisibility(View.INVISIBLE);
-		portText.setVisibility(View.INVISIBLE);
-		progressBar.setVisibility(View.VISIBLE);
+		
+		//Remove in future if it is not absolutely necessary
+		
 	}
 
 	@Override
 	public void commandExecutionEnd(String result, Boolean isException) {
-		titleTV.setVisibility(View.VISIBLE);
-		selectCommand.setVisibility(View.VISIBLE);
-		selectCommandTV.setVisibility(View.VISIBLE);
-		instanceText.setVisibility(View.VISIBLE);
-		portText.setVisibility(View.VISIBLE);
-		progressBar.setVisibility(View.INVISIBLE);
-		
-		if(isException){
-			showError(result);
-		}
-		else{
-			Intent resultIntent = new Intent(context, ResultActivity.class);
-			resultIntent.putExtra("Result", result);
-			startActivity(resultIntent);
-		}
-		
+			showResult(result, isException);
 	}
 	
 	//Method for execute the command
 	
 	public void callExecuteCommandTask(){
 		
-		ExecuteCommandTask executeCommandTask = new ExecuteCommandTask(this, getActivity().getApplicationContext(), instanceString, portNumber, command);
+		ExecuteCommandTask executeCommandTask = new ExecuteCommandTask(this, getActivity(), instanceString, portNumber, command);
 		executeCommandTask.execute();
 	}
 	
 	//Method for displaying Error / Exception
 	
-	public void showError(String message){
-		new AlertDialog.Builder(getActivity())
-	    .setTitle("Error")
-	    .setMessage(message)
-	    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int which) { 
-	            // continue with delete
-	        }
-	     }).setIcon(android.R.drawable.ic_dialog_alert)
-	     .show();
+	public void showResult(String message, Boolean isException){
+		
+		if(isException){
+			new AlertDialog.Builder(getActivity())
+		    .setTitle("Error")
+		    .setMessage(message)
+		    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int which) { 
+		            
+		        }
+		     }).setIconAttribute(android.R.attr.alertDialogIcon)
+		     .show();	
+		}
+		else{
+			new AlertDialog.Builder(getActivity())
+		    .setTitle("Result")
+		    .setMessage(message)
+		    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int which) { 
+		            
+		        }
+		     }).setIconAttribute(android.R.attr.icon)
+		     .show();
+		}
+		
+		
+	}
+	
+	public Boolean checkHostValidity(String instanceString){
+		Boolean isHostValid = false;
+		
+		if(instanceString == null || instanceString.equals("")){
+			isHostValid = false;
+		}
+		else{
+			isHostValid = true;
+		}
+		
+		return isHostValid;
+	}
+	
+	public Boolean checkPortValidity(String portString){
+		Boolean isPortValid = false;
+		
+		if(portString == null || portString.equals("")){
+			isPortValid = false;
+		}
+		else{
+			isPortValid = true;
+		}
+		
+		return isPortValid;
 	}
 
 }

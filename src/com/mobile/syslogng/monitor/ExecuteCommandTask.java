@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 
@@ -38,6 +40,7 @@ import javax.net.ssl.X509TrustManager;
 import javax.security.cert.X509Certificate;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -52,14 +55,10 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 	private String command;
 	private IExecuteCommandCallBack callBack;
 	
-	private SSLSocket socket;
-	private SSLSession session;
-	private PrintWriter out;
-	private StringBuilder sBuilder = null;
-	private BufferedReader in;
-	private String line;
-	private Boolean isException = false;
 	
+	
+	private Boolean isException = false;
+	private ProgressDialog progressDialog;
 	
 	public ExecuteCommandTask(){
 		// Empty Constructor
@@ -79,10 +78,20 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 	 protected void onPreExecute() {
 	  super.onPreExecute();
 	  callBack.commandExecutionStart();
+	  progressDialog = new ProgressDialog(context);
+	  this.progressDialog.setMessage("Executing the command. Please wait");
+	  this.progressDialog.show();
 	 }
 	
 	@Override
 	protected String doInBackground(String... params) {
+		
+		SSLSocket socket = null;
+		SSLSession session;
+		PrintWriter out = null;
+		StringBuilder sBuilder = null;
+		BufferedReader in = null;
+		String line = null;
 		
 		String result = null;
 		//Implementing for SELFSIGNED CERTIFICATES - Will be changed in future as per needs
@@ -116,19 +125,16 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 			}
 			out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 			out.println(command);
-			out.println();
+			
 			out.flush();
 			in = new BufferedReader(
 					new InputStreamReader(socket.getInputStream()));
 			sBuilder = new StringBuilder();
-			Long startTime = System.currentTimeMillis();
-			Long endTime = startTime + 3200;
 			
-			while (System.currentTimeMillis() < endTime) 
+			
+			while ((line  = in.readLine()) != null) 
 			{
-
-				line  = in.readLine();
-				if(line !=null && !line.equals("null") && !line.equals(""))
+				if(!line.equals("null") && !line.equals(""))
 					sBuilder.append(line);
 			}
 			
@@ -136,10 +142,17 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 			result = result.replaceAll("null", "");
 
 		}
-		catch(Exception e)
+		catch(IOException e)
 		{
 			isException = true;
-			Log.e("ExecuteCommand Error", e.toString());
+			Log.e("ExecuteCommand Error", e.getMessage());
+			result = e.getMessage();
+		} catch (KeyManagementException e) {
+			isException = true;
+			Log.e("ExecuteCommand Error", e.getMessage());
+			result = e.getMessage();
+		} catch (NoSuchAlgorithmException e) {
+			isException = true;
 			Log.e("ExecuteCommand Error", e.getMessage());
 			result = e.getMessage();
 		}
@@ -173,7 +186,8 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 	
 	@Override
 	protected void onPostExecute(String result) {
-		super.onPostExecute(result);
+			super.onPostExecute(result);
+			progressDialog.dismiss();
 			callBack.commandExecutionEnd(result, isException);
      }
 

@@ -27,7 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ResultActivity extends Activity {
+public class TempResultActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
