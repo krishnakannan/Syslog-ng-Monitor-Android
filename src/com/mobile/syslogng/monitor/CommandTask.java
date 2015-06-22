@@ -47,24 +47,24 @@ import android.util.Log;
 
 
 @SuppressLint("TrulyRandom")
-public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
+public class CommandTask extends AsyncTask<String, Void, String>{
 
 	private Context context;
 	private String hostName;
 	private Integer portNumber;
 	private String command;
-	private IExecuteCommandCallBack callBack;
+	private ICommandCallBack callBack;
 	
 	
 	
 	private Boolean isException = false;
 	private ProgressDialog progressDialog;
 	
-	public ExecuteCommandTask(){
+	public CommandTask(){
 		// Empty Constructor
 	}
 	
-	public ExecuteCommandTask(IExecuteCommandCallBack callBack, Context context, String hostName, Integer portNumber, String command){
+	public CommandTask(ICommandCallBack callBack, Context context, String hostName, Integer portNumber, String command){
 		
 		this.callBack = callBack;
 		this.context = context;
@@ -79,7 +79,7 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 	  super.onPreExecute();
 	  callBack.commandExecutionStart();
 	  progressDialog = new ProgressDialog(context);
-	  this.progressDialog.setMessage("Executing the command. Please wait");
+	  this.progressDialog.setMessage(context.getString(R.string.command_task_progress_dialog));
 	  this.progressDialog.show();
 	 }
 	
@@ -116,11 +116,13 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 		{
 			SSLContext sct = SSLContext.getInstance("SSL");
 			sct.init(null, trustAllCertificates, new SecureRandom());
+			
 			SocketFactory socketFactory = sct.getSocketFactory();
 			
 			if(socket == null)
 			{
 				socket = (SSLSocket) socketFactory.createSocket(hostName, portNumber);
+				
 				session = socket.getSession();
 			}
 			out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -139,7 +141,6 @@ public class ExecuteCommandTask extends AsyncTask<String, Void, String>{
 			}
 			
 			result = sBuilder.toString();
-			result = result.replaceAll("null", "");
 
 		}
 		catch(IOException e)

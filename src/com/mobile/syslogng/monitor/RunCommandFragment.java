@@ -38,7 +38,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RunCommandFragment extends Fragment implements IExecuteCommandCallBack{
+public class RunCommandFragment extends Fragment implements ICommandCallBack{
 	
 	public static final String ACTIONBAR_TITLE = "menu_title";
 	
@@ -49,14 +49,10 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 	private EditText etInstanceText;
 	private EditText etPortText;
 	
-	private TextView tvTitle;
-	private TextView tvSelectCommand;
-	
 	private Button btnRunCommand;
 	
-	private ProgressBar progressBar;
 	
-	private String command = "EMPTY";
+	private String command;
 	private String instanceString;
 	
 	private Integer portNumber;
@@ -74,14 +70,7 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_run_command, container, false);
         int i = getArguments().getInt(ACTIONBAR_TITLE);
-        String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i];
-       
-        tvTitle = (TextView) rootView.findViewById(R.id.textview_main_title);
-        tvSelectCommand = (TextView) rootView.findViewById(R.id.textview_select_command);
-        
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressbar_runcommand);
-        
-        progressBar.setVisibility(View.INVISIBLE);
+        String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i]; 
         
         spinnerSelectCommand = (Spinner) rootView.findViewById(R.id.spinner_command);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
@@ -118,24 +107,23 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 					try
 					{
 						portNumber = Integer.parseInt(portString);
-						callExecuteCommandTask();
+						executeCommandTask();
 						Log.i("Host Instance Details ","URL -  "+ instanceString +" Port - "+ portNumber + "command = "+command);
 						
 					}
 					catch(NumberFormatException e)
 					{
-						Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Port entered is not a Number", Toast.LENGTH_LONG);
+						Toast toast = Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.port_error), Toast.LENGTH_LONG);
 						toast.show();	
 					}
 					finally
 					{
-						etInstanceText.setText("");
-						etPortText.setText("");
+						//Add Anything in future based on needs
 					}
 				}
 				else
 				{
-					Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Enter valid host/port details", Toast.LENGTH_LONG);
+					Toast toast = Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.host_port_error), Toast.LENGTH_LONG);
 					toast.show();
 				}			
 			}
@@ -175,10 +163,10 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 	
 	//Method for execute the command
 	
-	public void callExecuteCommandTask(){
+	public void executeCommandTask(){
 		
-		ExecuteCommandTask executeCommandTask = new ExecuteCommandTask(this, getActivity(), instanceString, portNumber, command);
-		executeCommandTask.execute();
+		CommandTask commandTask = new CommandTask(this, getActivity(), instanceString, portNumber, command);
+		commandTask.execute();
 	}
 	
 	//Method for displaying Error / Exception
@@ -212,29 +200,13 @@ public class RunCommandFragment extends Fragment implements IExecuteCommandCallB
 	}
 	
 	public Boolean checkHostValidity(String instanceString){
-		Boolean isHostValid = false;
 		
-		if(instanceString == null || instanceString.equals("")){
-			isHostValid = false;
-		}
-		else{
-			isHostValid = true;
-		}
-		
-		return isHostValid;
+		return (instanceString != null && !instanceString.equals(""));
 	}
 	
 	public Boolean checkPortValidity(String portString){
-		Boolean isPortValid = false;
 		
-		if(portString == null || portString.equals("")){
-			isPortValid = false;
-		}
-		else{
-			isPortValid = true;
-		}
-		
-		return isPortValid;
+		return (portString != null && !portString.equals(""));
 	}
 
 }

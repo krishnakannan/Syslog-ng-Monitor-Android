@@ -18,7 +18,7 @@
 
 package com.mobile.syslogng.monitor;
 
-public interface IExecuteCommandCallBack{
+public interface ICommandCallBack{
 
 	void commandExecutionStart();
 	void commandExecutionEnd(String result, Boolean Exception);

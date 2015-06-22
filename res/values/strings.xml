@@ -44,5 +44,11 @@
 
     <string name="title_activity_result">ResultActivity</string>
     <string name="hello_world">Hello world!</string>
+    
+    
+    <string name="port_error">Port entered is not a Number</string>
+    <string name="host_port_error">Enter valid host/port details</string>
+    
+    <string name="command_task_progress_dialog">Executing the command. Please wait</string>
 
 </resources>
