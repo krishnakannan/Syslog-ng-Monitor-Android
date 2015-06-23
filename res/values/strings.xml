@@ -32,6 +32,7 @@
     <string-array name="menu_array">
         <item>Home</item>
         <item>Run Command</item>
+        <item>Import Certificate</item>
         <item>Add new Instance</item>
         <item>Saved Instances</item>
         <item>About</item>
@@ -50,5 +51,13 @@
     <string name="host_port_error">Enter valid host/port details</string>
     
     <string name="command_task_progress_dialog">Executing the command. Please wait</string>
-
+    
+    
+    <!-- Import Certificate Fragment -->
+    
+    <string name="ic_title"> Import the Certificate in pcks12 format</string>
+    <string name="ic_file_hint"> Filename for storing</string>
+	<string name="ic_file_select_btn">Select Certificate</string>
+	<string name="ic_selected_file"></string>
+	<string name="ic_import">Import</string>
 </resources>
