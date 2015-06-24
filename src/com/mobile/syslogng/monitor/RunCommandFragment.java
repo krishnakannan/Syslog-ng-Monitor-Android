@@ -18,6 +18,10 @@
 
 package com.mobile.syslogng.monitor;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -32,6 +36,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -45,17 +51,21 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 	private Context context;
 	
 	private Spinner spinnerSelectCommand;
+	private Spinner spinnerClientCertificate;
 	
 	private EditText etInstanceText;
 	private EditText etPortText;
+	private EditText etCertificatePasswordText;
 	
 	private Button btnRunCommand;
 	
 	
 	private String command;
+	private String certificateFileName;
 	private String instanceString;
 	
 	private Integer portNumber;
+	private Boolean includeCertificate = false;
 	
 	public RunCommandFragment(){
 		
@@ -71,6 +81,24 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
         View rootView = inflater.inflate(R.layout.fragment_run_command, container, false);
         int i = getArguments().getInt(ACTIONBAR_TITLE);
         String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i]; 
+        List<String> fileList = new ArrayList<String>();
+        
+        for(String file : context.getFilesDir().list()){
+        	fileList.add(file);
+        }
+        
+        
+        
+        spinnerClientCertificate = (Spinner) rootView.findViewById(R.id.spinner_certificate);
+        ArrayAdapter<String> certAdapter = new ArrayAdapter<String>(getActivity(),
+		        android.R.layout.simple_spinner_item, fileList);
+        certAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerClientCertificate.setAdapter(certAdapter);
+        
+        etCertificatePasswordText = (EditText) rootView.findViewById(R.id.et_certificate_pass);
+        
+        spinnerClientCertificate.setVisibility(View.INVISIBLE);
+        etCertificatePasswordText.setVisibility(View.INVISIBLE);
         
         spinnerSelectCommand = (Spinner) rootView.findViewById(R.id.spinner_command);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
@@ -88,38 +116,57 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 		super.onActivityCreated(savedInstanceState);
 		
 		 
-		
+		CheckBox cbIncludeCertificate = (CheckBox) getActivity().findViewById(R.id.cb_include_certificate);
 		btnRunCommand = (Button) getActivity().findViewById(R.id.btn_run_command);
 		btnRunCommand.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				etInstanceText = (EditText) getActivity().findViewById(R.id.et_instance_input);
 				etPortText = (EditText) getActivity().findViewById(R.id.et_port_input);
 				
-				String portString;
 				
+				String portString;
+				String passString;
 				
 				instanceString = etInstanceText.getText().toString();
 				portString = etPortText.getText().toString();
-				
+				passString = etCertificatePasswordText.getText().toString();
 				
 				if(checkHostValidity(instanceString) && checkPortValidity(portString))
 				{
-					try
-					{
-						portNumber = Integer.parseInt(portString);
-						executeCommandTask();
-						Log.i("Host Instance Details ","URL -  "+ instanceString +" Port - "+ portNumber + "command = "+command);
-						
+					if(includeCertificate && checkPasswordValidity(passString)){
+						try
+						{
+							portNumber = Integer.parseInt(portString);
+							executeCommandTask();
+							Log.i("Host Instance Details ","URL -  "+ instanceString +" Port - "+ portNumber + "command = "+command);
+							
+						}
+						catch(NumberFormatException e)
+						{
+							Toast toast = Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.port_error), Toast.LENGTH_LONG);
+							toast.show();	
+						}
 					}
-					catch(NumberFormatException e)
-					{
-						Toast toast = Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.port_error), Toast.LENGTH_LONG);
-						toast.show();	
+					else if(includeCertificate && !checkPasswordValidity(passString)){
+						Toast toast = Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.rc_certificatepass_err), Toast.LENGTH_LONG);
+						toast.show();
 					}
-					finally
-					{
-						//Add Anything in future based on needs
+					else if(!includeCertificate){
+						try
+						{
+							portNumber = Integer.parseInt(portString);
+							executeCommandTask();
+							Log.i("Host Instance Details ","URL -  "+ instanceString +" Port - "+ portNumber + "command = "+command);
+							
+						}
+						catch(NumberFormatException e)
+						{
+							Toast toast = Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.port_error), Toast.LENGTH_LONG);
+							toast.show();	
+						}
 					}
+					
+					
 				}
 				else
 				{
@@ -127,6 +174,41 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 					toast.show();
 				}			
 			}
+		});
+		
+		cbIncludeCertificate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(isChecked){
+					spinnerClientCertificate.setVisibility(View.VISIBLE);
+			        etCertificatePasswordText.setVisibility(View.VISIBLE);
+			        includeCertificate = true;
+				}
+				else{
+					spinnerClientCertificate.setVisibility(View.INVISIBLE);
+			        etCertificatePasswordText.setVisibility(View.INVISIBLE);
+			        includeCertificate = false;
+				}
+				
+			}
+			
+		});
+		
+		spinnerClientCertificate.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				
+				certificateFileName = parent.getItemAtPosition(position).toString();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+			
 		});
 		
 		spinnerSelectCommand.setOnItemSelectedListener(new OnItemSelectedListener(){
@@ -202,6 +284,11 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 	public Boolean checkHostValidity(String instanceString){
 		
 		return (instanceString != null && !instanceString.equals(""));
+	}
+	
+public Boolean checkPasswordValidity(String passString){
+		
+		return (passString != null && !passString.equals(""));
 	}
 	
 	public Boolean checkPortValidity(String portString){

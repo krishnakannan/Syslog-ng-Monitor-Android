@@ -84,7 +84,7 @@
         android:layout_alignRight="@+id/spinner_command"
         android:layout_alignEnd="@+id/spinner_command"
         android:layout_below="@+id/cb_include_certificate"
-        android:layout_marginTop="19dp" />
+        android:layout_marginTop="20dp" />
 
     <Button
         android:id="@+id/btn_run_command"
@@ -102,6 +102,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/spinner_certificate"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:ems="10" 
         android:hint="@string/rc_certificatepass_hint"
