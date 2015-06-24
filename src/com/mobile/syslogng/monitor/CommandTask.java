@@ -109,9 +109,9 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 		
 		SSLSocket socket = null;
 		SSLSession session;
-		PrintWriter out = null;
+		PrintWriter printWriter = null;
 		StringBuilder sBuilder = null;
-		BufferedReader in = null;
+		BufferedReader bufferedReader = null;
 		String line = null;
 		
 		String result = null;
@@ -169,16 +169,16 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 				
 				session = socket.getSession();
 			}
-			out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-			out.println(command);
+			printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+			printWriter.println(command);
 			
-			out.flush();
-			in = new BufferedReader(
+			printWriter.flush();
+			bufferedReader = new BufferedReader(
 					new InputStreamReader(socket.getInputStream()));
 			sBuilder = new StringBuilder();
 			
 			
-			while ((line  = in.readLine()) != null) 
+			while ((line  = bufferedReader.readLine()) != null) 
 			{
 				if(!line.equals("null") && !line.equals(""))
 					sBuilder.append(line);
@@ -219,11 +219,11 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 				if(socket != null){
 					socket.close();
 				}
-				if(out != null){
-					out.close();
+				if(printWriter != null){
+					printWriter.close();
 				}
-				if(in != null){
-					in.close();
+				if(bufferedReader != null){
+					bufferedReader.close();
 				}
 				
 				session = null;
