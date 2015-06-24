@@ -108,7 +108,6 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 	protected String doInBackground(String... params) {
 		
 		SSLSocket socket = null;
-		SSLSession session;
 		PrintWriter printWriter = null;
 		StringBuilder sBuilder = null;
 		BufferedReader bufferedReader = null;
@@ -167,7 +166,6 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 			{
 				socket = (SSLSocket) socketFactory.createSocket(hostName, portNumber);
 				
-				session = socket.getSession();
 			}
 			printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 			printWriter.println(command);
@@ -226,7 +224,7 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 					bufferedReader.close();
 				}
 				
-				session = null;
+				
 				sBuilder = null;
 				
 			} catch (IOException e) {
