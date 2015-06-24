@@ -38,10 +38,29 @@
     <TextView
         android:id="@+id/tv_import_certificate_selected_file"
         android:layout_width="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_select_file"
+        android:layout_below="@+id/tv_selected_file"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:text="@string/ic_selected_file" />
+
+    <TextView
+        android:id="@+id/tv_selected_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_select_file"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="@string/selected_file" />
+
+    <Button
+        android:id="@+id/btn_import"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_import_certificate_selected_file"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:visibility="invisible"
+        android:text="@string/ic_import_btn" />
 
 </RelativeLayout>

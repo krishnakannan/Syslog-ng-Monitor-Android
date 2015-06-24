@@ -190,7 +190,7 @@ public class MainActivity extends Activity {
 				break;
 				
 			case 3:
-				fragment = new ImportCertificateFragment();
+				fragment = new ImportCertificateFragment(getApplicationContext());
 				args.putInt(ViewInstanceFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();

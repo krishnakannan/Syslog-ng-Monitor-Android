@@ -58,6 +58,12 @@
     <string name="ic_title"> Import the Certificate in pcks12 format</string>
     <string name="ic_file_hint"> Filename for storing</string>
 	<string name="ic_file_select_btn">Select Certificate</string>
+	<string name="ic_import_btn">Import</string>
 	<string name="ic_selected_file"></string>
 	<string name="ic_import">Import</string>
+	<string name="selected_file">Selected File : </string>
+	<string name="ic_destination_file_err">Enter the Destination File Name</string>
+	<string name="ic_import_success">Successfully Imported</string>
+	<string name="ic_import_failure">Import Failed</string>
+	
 </resources>
