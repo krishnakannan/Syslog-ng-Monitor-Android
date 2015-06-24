@@ -67,7 +67,7 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 	
 	private Integer portNumber;
 	private Boolean isClientCertificateUsed = false;
-	
+	private List<String> fileList = new ArrayList<String>();
 	public RunCommandFragment(){
 		
 	}
@@ -82,7 +82,7 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
         View rootView = inflater.inflate(R.layout.fragment_run_command, container, false);
         int i = getArguments().getInt(ACTIONBAR_TITLE);
         String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i]; 
-        List<String> fileList = new ArrayList<String>();
+        
         
         for(String file : context.getFilesDir().list()){
         	fileList.add(file);
@@ -118,6 +118,12 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 		
 		 
 		CheckBox cbIncludeCertificate = (CheckBox) getActivity().findViewById(R.id.cb_include_certificate);
+		if(fileList.isEmpty()){
+			cbIncludeCertificate.setEnabled(false);
+		}
+		else{
+			cbIncludeCertificate.setEnabled(true);
+		}
 		btnRunCommand = (Button) getActivity().findViewById(R.id.btn_run_command);
 		btnRunCommand.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
