@@ -22,16 +22,22 @@ package com.mobile.syslogng.monitor;
 
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
 import javax.net.SocketFactory;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
@@ -54,7 +60,9 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 	private Integer portNumber;
 	private String command;
 	private ICommandCallBack callBack;
-	
+	private String certificateFileName;
+	private String certificatePassword;
+	private Boolean isClientCertificateUsed = false;
 	
 	
 	private Boolean isException = false;
@@ -71,6 +79,19 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 		this.hostName = hostName;
 		this.portNumber = portNumber;
 		this.command = command;
+		
+	}
+	
+	public CommandTask(ICommandCallBack callBack, Context context, String hostName, Integer portNumber, String command, String certificateFileName, String certificatePassword){
+		
+		this.callBack = callBack;
+		this.context = context;
+		this.hostName = hostName;
+		this.portNumber = portNumber;
+		this.command = command;
+		this.certificateFileName = certificateFileName;
+		this.certificatePassword = certificatePassword;
+		isClientCertificateUsed = true;
 		
 	}
 	
@@ -94,6 +115,10 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 		String line = null;
 		
 		String result = null;
+		SSLContext sct;
+		
+		
+		
 		//Implementing for SELFSIGNED CERTIFICATES - Will be changed in future as per needs
 		TrustManager[] trustAllCertificates = new TrustManager[] { 
 				new X509TrustManager() {
@@ -114,8 +139,27 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 		
 		try
 		{
-			SSLContext sct = SSLContext.getInstance("SSL");
-			sct.init(null, trustAllCertificates, new SecureRandom());
+			/*
+			 * Implementation of using client certificate.
+			 * if part is executed when client certificate is present
+			 * else part is executed when client certificate is not present
+			 */
+			
+			if(isClientCertificateUsed){
+				KeyStore keyStore = KeyStore.getInstance("PKCS12");
+				FileInputStream certificateFileInputStream = new FileInputStream(context.getFilesDir().getAbsolutePath()+"/"+certificateFileName);
+				keyStore.load(certificateFileInputStream, certificatePassword.toCharArray());
+				KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("X509");
+				keyManagerFactory.init(keyStore, certificatePassword.toCharArray());
+				KeyManager[] keyManagers = keyManagerFactory.getKeyManagers();
+				sct = SSLContext.getInstance("TLS");
+				sct.init(keyManagers, trustAllCertificates, new SecureRandom());
+			}
+			
+			else{
+				sct = SSLContext.getInstance("SSL");
+				sct.init(null, trustAllCertificates, new SecureRandom());
+			}
 			
 			SocketFactory socketFactory = sct.getSocketFactory();
 			
@@ -153,6 +197,18 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 			Log.e("ExecuteCommand Error", e.getMessage());
 			result = e.getMessage();
 		} catch (NoSuchAlgorithmException e) {
+			isException = true;
+			Log.e("ExecuteCommand Error", e.getMessage());
+			result = e.getMessage();
+		} catch (KeyStoreException e) {
+			isException = true;
+			Log.e("ExecuteCommand Error", e.getMessage());
+			result = e.getMessage();
+		} catch (CertificateException e) {
+			isException = true;
+			Log.e("ExecuteCommand Error", e.getMessage());
+			result = e.getMessage();
+		} catch (UnrecoverableKeyException e) {
 			isException = true;
 			Log.e("ExecuteCommand Error", e.getMessage());
 			result = e.getMessage();

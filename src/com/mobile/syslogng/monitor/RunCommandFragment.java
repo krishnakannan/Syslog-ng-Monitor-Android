@@ -63,9 +63,10 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 	private String command;
 	private String certificateFileName;
 	private String instanceString;
+	private String passString;
 	
 	private Integer portNumber;
-	private Boolean includeCertificate = false;
+	private Boolean isClientCertificateUsed = false;
 	
 	public RunCommandFragment(){
 		
@@ -125,7 +126,7 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 				
 				
 				String portString;
-				String passString;
+				
 				
 				instanceString = etInstanceText.getText().toString();
 				portString = etPortText.getText().toString();
@@ -133,7 +134,7 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 				
 				if(checkHostValidity(instanceString) && checkPortValidity(portString))
 				{
-					if(includeCertificate && checkPasswordValidity(passString)){
+					if(isClientCertificateUsed && checkPasswordValidity(passString)){
 						try
 						{
 							portNumber = Integer.parseInt(portString);
@@ -147,11 +148,11 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 							toast.show();	
 						}
 					}
-					else if(includeCertificate && !checkPasswordValidity(passString)){
+					else if(isClientCertificateUsed && !checkPasswordValidity(passString)){
 						Toast toast = Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.rc_certificatepass_err), Toast.LENGTH_LONG);
 						toast.show();
 					}
-					else if(!includeCertificate){
+					else if(!isClientCertificateUsed){
 						try
 						{
 							portNumber = Integer.parseInt(portString);
@@ -183,12 +184,12 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 				if(isChecked){
 					spinnerClientCertificate.setVisibility(View.VISIBLE);
 			        etCertificatePasswordText.setVisibility(View.VISIBLE);
-			        includeCertificate = true;
+			        isClientCertificateUsed = true;
 				}
 				else{
 					spinnerClientCertificate.setVisibility(View.INVISIBLE);
 			        etCertificatePasswordText.setVisibility(View.INVISIBLE);
-			        includeCertificate = false;
+			        isClientCertificateUsed = false;
 				}
 				
 			}
@@ -246,9 +247,16 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 	//Method for execute the command
 	
 	public void executeCommandTask(){
+		if(isClientCertificateUsed){
+			CommandTask commandTask = new CommandTask(this, getActivity(), instanceString, portNumber, command, certificateFileName, passString);
+			commandTask.execute();
+		}
+		else{
+			CommandTask commandTask = new CommandTask(this, getActivity(), instanceString, portNumber, command);
+			commandTask.execute();
+		}
 		
-		CommandTask commandTask = new CommandTask(this, getActivity(), instanceString, portNumber, command);
-		commandTask.execute();
+		
 	}
 	
 	//Method for displaying Error / Exception
