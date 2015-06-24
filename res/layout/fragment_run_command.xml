@@ -4,15 +4,6 @@
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
     
-    <TextView
-        android:id="@+id/textview_main_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="@string/add_instance_title" />
-    
     
     <EditText
         android:id="@+id/et_instance_input"
@@ -23,7 +14,7 @@
         android:layout_alignEnd="@+id/et_port_input"
         android:layout_alignRight="@+id/et_port_input"
         android:layout_alignLeft="@+id/et_port_input"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="20dp"
         android:layout_centerHorizontal="true"
         android:ems="10"
         android:hint="@string/host_hint"
@@ -36,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textview_select_command"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="20dp"
         android:layout_centerHorizontal="true"
         android:ems="10"
         android:hint="@string/port_hint"
@@ -54,26 +45,67 @@
         android:layout_alignEnd="@+id/et_port_input"
         android:layout_alignLeft="@+id/et_port_input"
         android:layout_alignRight="@+id/et_port_input"
-        android:layout_below="@+id/textview_select_command"
-        android:layout_marginTop="32dp" />
-
-    
-    
-    <Button
-        android:id="@+id/btn_run_command"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="32dp"
-        android:text="@string/run_command" />
+        android:layout_centerVertical="true" />
 
     <TextView
         android:id="@+id/textview_select_command"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/spinner_command"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_marginBottom="20dp"
         android:text="@string/select_command" />
+
+    <TextView
+        android:id="@+id/textview_main_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/add_instance_title" />
+
+    <CheckBox
+        android:id="@+id/cb_include_certificate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/spinner_command"
+        android:layout_marginTop="12dp"
+        android:text="@string/rc_checkbox" />
+
+    <Spinner
+        android:id="@+id/spinner_certificate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spinner_command"
+        android:layout_alignStart="@+id/spinner_command"
+        android:layout_alignRight="@+id/spinner_command"
+        android:layout_alignEnd="@+id/spinner_command"
+        android:layout_below="@+id/cb_include_certificate"
+        android:layout_marginTop="19dp" />
+
+    <Button
+        android:id="@+id/btn_run_command"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="@string/run_command" />
+
+    <EditText
+        android:id="@+id/et_certificate_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner_certificate"
+        android:layout_centerHorizontal="true"
+        android:ems="10" 
+        android:hint="@string/rc_certificatepass_hint"
+        android:imeOptions="actionDone"
+        android:singleLine="true"/>
 
 </RelativeLayout>

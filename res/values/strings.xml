@@ -66,4 +66,8 @@
 	<string name="ic_import_success">Successfully Imported</string>
 	<string name="ic_import_failure">Import Failed</string>
 	
+	<!-- Run Command Related - Newly Added -->
+	
+	<string name="rc_checkbox">Include Client Certificate</string>
+	<string name="rc_certificatepass_hint">Enter password</string>
 </resources>
