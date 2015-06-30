@@ -1,8 +1,30 @@
+/*
+
+	This program is free software: you can redistribute it and/or modify
+
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+ */
+
 package com.mobile.syslogng.monitor;
+
+import java.util.List;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,9 +77,18 @@ public class ImportCertificateFragment extends Fragment {
     }
 	
     private void selectFile(){
+    	PackageManager packageManager = getActivity().getPackageManager();
     	Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("file/*");
-        startActivityForResult(intent,PICKFILE_CODE);
+        List<ResolveInfo> list = packageManager.queryIntentActivities(intent,
+                PackageManager.GET_ACTIVITIES);
+        if(list.size() > 0){
+        	startActivityForResult(intent,PICKFILE_CODE);
+        }
+        else{
+        	Toast.makeText(context, getActivity().getString(R.string.file_manager_err), Toast.LENGTH_LONG).show();
+        }
+        
     }
     
     @SuppressWarnings("static-access")
@@ -66,23 +97,30 @@ public class ImportCertificateFragment extends Fragment {
     	final Button btnImportFile = (Button) getActivity().findViewById(R.id.btn_import);
     	final EditText etFileName = (EditText) getActivity().findViewById(R.id.et_import_certificate_filename);
     	final TextView tvPath = (TextView) getActivity().findViewById(R.id.tv_import_certificate_selected_file);
+    	final String inputFilePath;
     	switch(requestCode){
     		case PICKFILE_CODE:
     			if(resultCode == getActivity().RESULT_OK){
-    				final String filePath = data.getData().getPath();
-    				tvPath.setText(filePath);
+    				if(data.getData().getPath() != null){
+    					inputFilePath = data.getData().getPath();
+    				}
+    				else{
+    					inputFilePath = "";
+    				}
+
+    				tvPath.setText(inputFilePath);
     				btnImportFile.setVisibility(View.VISIBLE);
     				btnImportFile.setOnClickListener(new View.OnClickListener() {
 						
 						@Override
 						public void onClick(View v) {
 							Boolean status;
-							if(etFileName.getText().toString().equals("")){
+							if(etFileName.getText().toString().equals("") || inputFilePath.equals("")){
 								Toast.makeText(context, getActivity().getString(R.string.ic_destination_file_err), Toast.LENGTH_LONG).show(); 
 							}
 							else{
 								FileManager fManager = new FileManager(context);
-								status = fManager.copyFiles(filePath, etFileName.getText().toString());
+								status = fManager.copyFile(inputFilePath, fManager.getCertificateFile(etFileName.getText().toString()));
 								if(status){
 									etFileName.setText("");
 									tvPath.setText("");

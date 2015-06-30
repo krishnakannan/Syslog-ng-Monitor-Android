@@ -75,6 +75,10 @@ public class MainActivity extends Activity {
 		
 		if(preference.getBoolean("firstRun",true))
 		{
+			FileManager fManager = new FileManager(getApplicationContext());			
+			fManager.createCertificateDirectory();	
+			
+			
 			SQLiteDatabase instanceDb = openOrCreateDatabase("instances.db",SQLiteDatabase.CREATE_IF_NECESSARY, null);
 			
 			instanceDb.execSQL("DROP TABLE IF EXISTS" + " INSTANCE_TABLE"); // Please Remove it during Production

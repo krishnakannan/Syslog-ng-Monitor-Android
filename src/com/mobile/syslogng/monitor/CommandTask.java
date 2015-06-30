@@ -39,7 +39,6 @@ import javax.net.SocketFactory;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -62,7 +61,7 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 	private ICommandCallBack callBack;
 	private String certificateFileName;
 	private String certificatePassword;
-	private Boolean isClientCertificateUsed = false;
+	private String result = null;
 	
 	
 	private Boolean isException = false;
@@ -72,15 +71,7 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 		// Empty Constructor
 	}
 	
-	public CommandTask(ICommandCallBack callBack, Context context, String hostName, Integer portNumber, String command){
-		
-		this.callBack = callBack;
-		this.context = context;
-		this.hostName = hostName;
-		this.portNumber = portNumber;
-		this.command = command;
-		
-	}
+
 	
 	public CommandTask(ICommandCallBack callBack, Context context, String hostName, Integer portNumber, String command, String certificateFileName, String certificatePassword){
 		
@@ -91,7 +82,7 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 		this.command = command;
 		this.certificateFileName = certificateFileName;
 		this.certificatePassword = certificatePassword;
-		isClientCertificateUsed = true;
+		
 		
 	}
 	
@@ -113,7 +104,7 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 		BufferedReader bufferedReader = null;
 		String line = null;
 		
-		String result = null;
+		
 		SSLContext sct;
 		
 		
@@ -144,13 +135,8 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 			 * else part is executed when client certificate is not present
 			 */
 			
-			if(isClientCertificateUsed){
-				KeyStore keyStore = KeyStore.getInstance("PKCS12");
-				FileInputStream certificateFileInputStream = new FileInputStream(context.getFilesDir().getAbsolutePath()+"/"+certificateFileName);
-				keyStore.load(certificateFileInputStream, certificatePassword.toCharArray());
-				KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("X509");
-				keyManagerFactory.init(keyStore, certificatePassword.toCharArray());
-				KeyManager[] keyManagers = keyManagerFactory.getKeyManagers();
+			if(certificateFileName != null){
+				KeyManager[] keyManagers = getKeyManager();
 				sct = SSLContext.getInstance("TLS");
 				sct.init(keyManagers, trustAllCertificates, new SecureRandom());
 			}
@@ -182,7 +168,10 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 					sBuilder.append(line);
 			}
 			
-			result = sBuilder.toString();
+			if(!isException){
+				result = sBuilder.toString();
+			}
+			
 
 		}
 		catch(IOException e)
@@ -198,30 +187,18 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 			isException = true;
 			Log.e("ExecuteCommand Error", e.getMessage());
 			result = e.getMessage();
-		} catch (KeyStoreException e) {
-			isException = true;
-			Log.e("ExecuteCommand Error", e.getMessage());
-			result = e.getMessage();
-		} catch (CertificateException e) {
-			isException = true;
-			Log.e("ExecuteCommand Error", e.getMessage());
-			result = e.getMessage();
-		} catch (UnrecoverableKeyException e) {
-			isException = true;
-			Log.e("ExecuteCommand Error", e.getMessage());
-			result = e.getMessage();
 		}
 		finally
 		{
 			try {
-				if(socket != null){
-					socket.close();
-				}
 				if(printWriter != null){
 					printWriter.close();
 				}
 				if(bufferedReader != null){
 					bufferedReader.close();
+				}
+				if(socket != null){
+					socket.close();
 				}
 				
 				
@@ -245,5 +222,44 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 			progressDialog.dismiss();
 			callBack.commandExecutionEnd(result, isException);
      }
+	
+	public KeyManager[] getKeyManager(){
+	
+		FileManager fManager = new FileManager(context);
+		KeyManager[] keyManagers = null;
+	try {
+		KeyStore keyStore;
+		keyStore = KeyStore.getInstance("PKCS12");
+		FileInputStream certificateFileInputStream = new FileInputStream(fManager.getCertificateFile(certificateFileName));
+		keyStore.load(certificateFileInputStream, certificatePassword.toCharArray());
+		KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("X509");
+		keyManagerFactory.init(keyStore, certificatePassword.toCharArray());
+		keyManagers = keyManagerFactory.getKeyManagers();
+		return keyManagers;
+	} catch (KeyStoreException e) {
+		isException = true;
+		Log.e("ExecuteCommand Error", e.getMessage());
+		result = e.getMessage();
+	} catch (NoSuchAlgorithmException e) {
+		isException = true;
+		Log.e("ExecuteCommand Error", e.getMessage());
+		result = e.getMessage();
+	} catch (CertificateException e) {
+		isException = true;
+		Log.e("ExecuteCommand Error", e.getMessage());
+		result = e.getMessage();
+	} catch (IOException e) {
+		isException = true;
+		Log.e("ExecuteCommand Error", e.getMessage());
+		result = e.getMessage();
+	} catch (UnrecoverableKeyException e) {
+		isException = true;
+		Log.e("ExecuteCommand Error", e.getMessage());
+		result = e.getMessage();
+	}
+	return keyManagers;
+	
+	
+	}
 
 }

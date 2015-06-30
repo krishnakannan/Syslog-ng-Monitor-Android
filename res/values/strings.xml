@@ -62,13 +62,14 @@
 	<string name="ic_selected_file"></string>
 	<string name="ic_import">Import</string>
 	<string name="selected_file">Selected File : </string>
-	<string name="ic_destination_file_err">Enter the Destination File Name</string>
+	<string name="ic_destination_file_err">Enter a valid input file path / destination file name</string>
 	<string name="ic_import_success">Successfully Imported</string>
 	<string name="ic_import_failure">Import Failed</string>
+	<string name="file_manager_err">No file manager is installed</string>
 	
 	<!-- Run Command Related - Newly Added -->
 	
 	<string name="rc_checkbox">Include Client Certificate</string>
 	<string name="rc_certificatepass_hint">Enter password</string>
-	<string name="rc_certificatepass_err">Please enter password. It cannot be empty</string>
+	<string name="rc_certificatepass_err">Password is empty</string>
 </resources>

@@ -26,7 +26,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,9 +38,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class RunCommandFragment extends Fragment implements ICommandCallBack{
@@ -83,9 +80,11 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
         int i = getArguments().getInt(ACTIONBAR_TITLE);
         String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i]; 
         
+        File certificateDir = new File(context.getFilesDir().getAbsolutePath(), "certificates");
         
-        for(String file : context.getFilesDir().list()){
-        	fileList.add(file);
+        File[] certificates = certificateDir.listFiles();
+        for(File file : certificates){
+        	fileList.add(file.getName());
         }
         
         
@@ -140,23 +139,37 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 				
 				if(checkHostValidity(instanceString) && checkPortValidity(portString))
 				{
-					if(isClientCertificateUsed && checkPasswordValidity(passString)){
-						try
-						{
-							portNumber = Integer.parseInt(portString);
-							executeCommandTask();
-							Log.i("Host Instance Details ","URL -  "+ instanceString +" Port - "+ portNumber + "command = "+command);
-							
+					if(isClientCertificateUsed){
+						if(checkPasswordValidity(passString)){
+							try
+							{
+								portNumber = Integer.parseInt(portString);
+								executeCommandTask();
+								Log.i("Host Instance Details ","URL -  "+ instanceString +" Port - "+ portNumber + "command = "+command);
+								
+							}
+							catch(NumberFormatException e)
+							{
+								Toast toast = Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.port_error), Toast.LENGTH_LONG);
+								toast.show();	
+							}
+						}						
+						else{
+							Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.rc_certificatepass_err), Toast.LENGTH_LONG).show();
+							try
+							{
+								portNumber = Integer.parseInt(portString);
+								executeCommandTask();
+								Log.i("Host Instance Details ","URL -  "+ instanceString +" Port - "+ portNumber + "command = "+command);
+								
+							}
+							catch(NumberFormatException e)
+							{
+								Toast toast = Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.port_error), Toast.LENGTH_LONG);
+								toast.show();	
+							}
 						}
-						catch(NumberFormatException e)
-						{
-							Toast toast = Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.port_error), Toast.LENGTH_LONG);
-							toast.show();	
-						}
-					}
-					else if(isClientCertificateUsed && !checkPasswordValidity(passString)){
-						Toast toast = Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.rc_certificatepass_err), Toast.LENGTH_LONG);
-						toast.show();
+						
 					}
 					else if(!isClientCertificateUsed){
 						try
@@ -258,7 +271,7 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 			commandTask.execute();
 		}
 		else{
-			CommandTask commandTask = new CommandTask(this, getActivity(), instanceString, portNumber, command);
+			CommandTask commandTask = new CommandTask(this, getActivity(), instanceString, portNumber, command, null, null);
 			commandTask.execute();
 		}
 		
