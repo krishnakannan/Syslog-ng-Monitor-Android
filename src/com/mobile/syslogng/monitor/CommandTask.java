@@ -23,6 +23,7 @@ package com.mobile.syslogng.monitor;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -110,22 +111,7 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 		
 		
 		//Implementing for SELFSIGNED CERTIFICATES - Will be changed in future as per needs
-		TrustManager[] trustAllCertificates = new TrustManager[] { 
-				new X509TrustManager() {
-					public java.security.cert.X509Certificate[] getAcceptedIssuers() { 
-						return new java.security.cert.X509Certificate[0]; 
-					}
-					@SuppressWarnings("unused")
-					public void checkClientTrusted(X509Certificate[] certs, String authType) {}
-					@SuppressWarnings("unused")
-					public void checkServerTrusted(X509Certificate[] certs, String authType) {}
-					@Override
-					public void checkClientTrusted(java.security.cert.X509Certificate[] arg0, String arg1) throws CertificateException {
-					}
-					@Override
-					public void checkServerTrusted(java.security.cert.X509Certificate[] arg0, String arg1) throws CertificateException {
-					}
-				}};
+		TrustManager[] trustAllCertificates = getTrustManagers();
 		
 		try
 		{
@@ -135,16 +121,13 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 			 * else part is executed when client certificate is not present
 			 */
 			
+			KeyManager[] keyManagers = null;
+			sct = SSLContext.getInstance("TLS");
 			if(certificateFileName != null){
-				KeyManager[] keyManagers = getKeyManager();
-				sct = SSLContext.getInstance("TLS");
-				sct.init(keyManagers, trustAllCertificates, new SecureRandom());
+				keyManagers = getKeyManagers();
 			}
+			sct.init(keyManagers, trustAllCertificates, new SecureRandom());
 			
-			else{
-				sct = SSLContext.getInstance("SSL");
-				sct.init(null, trustAllCertificates, new SecureRandom());
-			}
 			
 			SocketFactory socketFactory = sct.getSocketFactory();
 			
@@ -168,9 +151,9 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 					sBuilder.append(line);
 			}
 			
-			if(!isException){
+			
 				result = sBuilder.toString();
-			}
+			
 			
 
 		}
@@ -184,6 +167,18 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 			Log.e("ExecuteCommand Error", e.getMessage());
 			result = e.getMessage();
 		} catch (NoSuchAlgorithmException e) {
+			isException = true;
+			Log.e("ExecuteCommand Error", e.getMessage());
+			result = e.getMessage();
+		} catch (UnrecoverableKeyException e) {
+			isException = true;
+			Log.e("ExecuteCommand Error", e.getMessage());
+			result = e.getMessage();
+		} catch (KeyStoreException e) {
+			isException = true;
+			Log.e("ExecuteCommand Error", e.getMessage());
+			result = e.getMessage();
+		} catch (CertificateException e) {
 			isException = true;
 			Log.e("ExecuteCommand Error", e.getMessage());
 			result = e.getMessage();
@@ -223,11 +218,11 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 			callBack.commandExecutionEnd(result, isException);
      }
 	
-	public KeyManager[] getKeyManager(){
+	public KeyManager[] getKeyManagers() throws KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, CertificateException, IOException{
 	
 		FileManager fManager = new FileManager(context);
 		KeyManager[] keyManagers = null;
-	try {
+	
 		KeyStore keyStore;
 		keyStore = KeyStore.getInstance("PKCS12");
 		FileInputStream certificateFileInputStream = new FileInputStream(fManager.getCertificateFile(certificateFileName));
@@ -236,30 +231,26 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 		keyManagerFactory.init(keyStore, certificatePassword.toCharArray());
 		keyManagers = keyManagerFactory.getKeyManagers();
 		return keyManagers;
-	} catch (KeyStoreException e) {
-		isException = true;
-		Log.e("ExecuteCommand Error", e.getMessage());
-		result = e.getMessage();
-	} catch (NoSuchAlgorithmException e) {
-		isException = true;
-		Log.e("ExecuteCommand Error", e.getMessage());
-		result = e.getMessage();
-	} catch (CertificateException e) {
-		isException = true;
-		Log.e("ExecuteCommand Error", e.getMessage());
-		result = e.getMessage();
-	} catch (IOException e) {
-		isException = true;
-		Log.e("ExecuteCommand Error", e.getMessage());
-		result = e.getMessage();
-	} catch (UnrecoverableKeyException e) {
-		isException = true;
-		Log.e("ExecuteCommand Error", e.getMessage());
-		result = e.getMessage();
 	}
-	return keyManagers;
 	
-	
+	public TrustManager[] getTrustManagers(){
+		return  new TrustManager[] { 
+				new X509TrustManager() {
+					public java.security.cert.X509Certificate[] getAcceptedIssuers() { 
+						return new java.security.cert.X509Certificate[0]; 
+					}
+					@SuppressWarnings("unused")
+					public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+					@SuppressWarnings("unused")
+					public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+					@Override
+					public void checkClientTrusted(java.security.cert.X509Certificate[] arg0, String arg1) throws CertificateException {
+					}
+					@Override
+					public void checkServerTrusted(java.security.cert.X509Certificate[] arg0, String arg1) throws CertificateException {
+					}
+				}};
+		
 	}
 
 }
