@@ -46,6 +46,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import static com.mobile.syslogng.monitor.SQLiteConstants.CREATEINSTANCETABLE;
 
 public class MainActivity extends Activity {
 
@@ -82,7 +83,7 @@ public class MainActivity extends Activity {
 			SQLiteDatabase instanceDb = openOrCreateDatabase("instances.db",SQLiteDatabase.CREATE_IF_NECESSARY, null);
 			
 			instanceDb.execSQL("DROP TABLE IF EXISTS" + " INSTANCE_TABLE"); // Please Remove it during Production
-			instanceDb.execSQL("CREATE TABLE if not exists INSTANCE_TABLE(_id INTEGER PRIMARY KEY, INSTANCE_NAME TEXT, INSTANCE_HOSTNAME TEXT, PORT_NUMBER TEXT)");
+			instanceDb.execSQL(CREATEINSTANCETABLE);
 			
 			
 			preference.edit().putBoolean("firstRun", false).commit();
@@ -201,7 +202,7 @@ public class MainActivity extends Activity {
 				break;
 				
 			case 4:
-				fragment = new AddInstanceFragment();
+				fragment = new AddInstanceFragment(getApplicationContext());
 				args.putInt(AddInstanceFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();

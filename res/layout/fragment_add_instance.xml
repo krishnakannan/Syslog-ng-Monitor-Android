@@ -2,66 +2,108 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   >
-
-    <TextView
-        android:id="@+id/main_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="62dp"
-        android:text="@string/add_instance_title" />
-
-    <EditText
-        android:id="@+id/et_instance_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/et_host_name"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:singleLine="true"
-        android:imeOptions="actionNext"
-        android:layout_marginTop="40dp" 
-        android:hint="@string/instance_name_hint"/>
+    tools:context="${relativePackage}.${activityClass}" >
+    
     
     <EditText
-        android:id="@+id/et_host_name"
+        android:id="@+id/ai_et_instance_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ai_et_instance_input"
+        android:layout_marginBottom="25dp"
+        android:layout_alignStart="@+id/ai_et_port_input"
+        android:layout_alignEnd="@+id/ai_et_port_input"
+        android:layout_alignRight="@+id/ai_et_port_input"
+        android:layout_alignLeft="@+id/ai_et_port_input"
+        android:ems="10"
+        android:hint="@string/instance_name_hint"
+        android:imeOptions="actionNext"
+        android:singleLine="true">
+          <requestFocus />
+     </EditText>
+    
+    <EditText
+        android:id="@+id/ai_et_instance_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ai_et_port_input"
+        android:layout_alignStart="@+id/ai_et_port_input"
+        android:layout_alignEnd="@+id/ai_et_port_input"
+        android:layout_alignRight="@+id/ai_et_port_input"
+        android:layout_alignLeft="@+id/ai_et_port_input"
+        android:layout_marginBottom="25dp"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="@string/host_hint"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
+         />
+    
+    <EditText
+        android:id="@+id/ai_et_port_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ai_cb_include_certificate"
+        android:layout_marginBottom="25dp"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="@string/port_hint"
+        android:imeOptions="actionDone"
+        android:singleLine="true" >
+
+       
+    </EditText>
+    
+     
+    
+    
+    
+
+   
+
+    <CheckBox
+        android:id="@+id/ai_cb_include_certificate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:ems="10" 
-        android:singleLine="true"
-        android:imeOptions="actionNext"
-        android:layout_marginTop="40dp"
-        android:hint="@string/host_hint">
-		
-        <requestFocus />
-    </EditText>
+        android:text="@string/rc_checkbox" />
 
-    <EditText
-        android:id="@+id/et_port_number"
+    <Spinner
+        android:id="@+id/ai_spinner_certificate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/et_host_name"
+        android:layout_alignLeft="@+id/ai_et_port_input"
+        android:layout_alignStart="@+id/ai_et_port_input"
+        android:layout_alignRight="@+id/ai_et_port_input"
+        android:layout_alignEnd="@+id/ai_et_port_input"
+        android:layout_below="@+id/ai_cb_include_certificate"
+        android:layout_marginTop="25dp"
+        />
+
+   
+    <EditText
+        android:id="@+id/ai_et_certificate_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ai_spinner_certificate"
+        android:layout_marginTop="25dp"
         android:layout_centerHorizontal="true"
-        android:singleLine="true"
-        android:inputType="numberSigned"
-        android:imeOptions="actionNext"
-        android:layout_marginTop="40dp"
-        android:hint="@string/port_hint"
-        android:ems="10" />
-    
-    <Button
-        android:id="@+id/btn_add_instance"
+        android:ems="10" 
+        android:hint="@string/rc_certificatepass_hint"
+        android:imeOptions="actionDone"
+        android:singleLine="true"/>
+
+     <Button
+        android:id="@+id/ai_btn_save_instance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:text="@string/add_instance" />
-
     
-
+    
 </RelativeLayout>

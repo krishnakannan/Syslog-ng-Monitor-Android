@@ -75,7 +75,7 @@ public class ViewInstanceFragment extends Fragment{
     	
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	
-    	TempgetInstanceDataFromDb instanceDataObject = new TempgetInstanceDataFromDb(context);
+    	SQLiteManager instanceDataObject = new SQLiteManager(context);
         list = instanceDataObject.getInstancesData();
     	
     	View rootView = inflater.inflate(R.layout.fragment_view_instance, container, false);

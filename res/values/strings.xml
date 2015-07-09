@@ -46,7 +46,8 @@
     <string name="title_activity_result">ResultActivity</string>
     <string name="hello_world">Hello world!</string>
     
-    
+    <string name="insert_instance_success">Instance successfully added into Database</string>
+    <string name="insert_instance_failure">There was a problem occurred in adding Instance</string> 
     <string name="port_error">Port entered is not a Number</string>
     <string name="host_port_error">Enter valid host/port details</string>
     
