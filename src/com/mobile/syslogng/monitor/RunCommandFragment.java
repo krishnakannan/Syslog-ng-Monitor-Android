@@ -79,8 +79,8 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
         View rootView = inflater.inflate(R.layout.fragment_run_command, container, false);
         int i = getArguments().getInt(ACTIONBAR_TITLE);
         String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i]; 
-        
-        File certificateDir = new File(context.getFilesDir().getAbsolutePath(), "certificates");
+        FileManager fManager = new FileManager(context);
+        File certificateDir = new File(fManager.getCertificateDirectory());
         
         File[] certificates = certificateDir.listFiles();
         for(File file : certificates){

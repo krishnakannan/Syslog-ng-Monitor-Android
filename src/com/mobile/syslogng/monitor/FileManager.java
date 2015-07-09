@@ -88,12 +88,16 @@ public class FileManager {
 	
 	public String getCertificateFile(String certificateName){
 				
-		return context.getFilesDir().getAbsolutePath()+"/certificates/"+certificateName;
+		return getCertificateDirectory()+"/"+certificateName;
 	}
 	
 	public void createCertificateDirectory(){
-		File certificateDirectory = new File(context.getFilesDir().getAbsolutePath(), "certificates");
+		File certificateDirectory = new File(getCertificateDirectory());
 		certificateDirectory.mkdir();
+	}
+	
+	public String getCertificateDirectory(){
+		return new File(context.getFilesDir(), "certificates").getPath();
 	}
 	
 
