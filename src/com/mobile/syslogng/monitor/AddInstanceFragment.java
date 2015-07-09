@@ -68,7 +68,7 @@ public class AddInstanceFragment extends Fragment {
 		        hostName = editTextHostName.getText().toString();
 		        portNumber = editTextPortNumber.getText().toString();
 		        
-		        AddInstanceIntoDb saveInstance = new AddInstanceIntoDb(getActivity().getApplicationContext(),instanceName, hostName, portNumber);
+		        TempAddInstanceIntoDb saveInstance = new TempAddInstanceIntoDb(getActivity().getApplicationContext(),instanceName, hostName, portNumber);
 		        insertStatus = saveInstance.insert();
 		        
 		        if(insertStatus){

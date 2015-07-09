@@ -21,7 +21,7 @@ package com.mobile.syslogng.monitor;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-public class AddInstanceIntoDb {
+public class TempAddInstanceIntoDb {
 	
 	public Boolean status = false;
 	private Context context;
@@ -29,13 +29,13 @@ public class AddInstanceIntoDb {
 	private String hostName;
 	private String portNumber;
 	
-	public AddInstanceIntoDb(){
+	public TempAddInstanceIntoDb(){
 		/*
 		 * Empty Constructor Modify when Needed 
 		 */
 	}
 	
-	public AddInstanceIntoDb(Context context, String instanceName, String hostName, String portNumber){
+	public TempAddInstanceIntoDb(Context context, String instanceName, String hostName, String portNumber){
 		this.context = context;
 		this.instanceName = instanceName;
 		this.hostName = hostName;
