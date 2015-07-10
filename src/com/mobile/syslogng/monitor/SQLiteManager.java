@@ -11,8 +11,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import static com.mobile.syslogng.monitor.SQLiteConstants.DATABASEVERSION;
 import static com.mobile.syslogng.monitor.SQLiteConstants.DATABASENAME;
-import static com.mobile.syslogng.monitor.SQLiteConstants.INSERTINSTANCEQUERY;
+import static com.mobile.syslogng.monitor.SQLiteConstants.INSERTINSTANCE;
 import static com.mobile.syslogng.monitor.SQLiteConstants.SELECTALLINSTANCES;
+import static com.mobile.syslogng.monitor.SQLiteConstants.DELETEINSTANCES;
 
 public class SQLiteManager extends SQLiteOpenHelper{
 	
@@ -40,7 +41,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
 		Boolean status;
 		
 		SQLiteDatabase instanceDb = context.openOrCreateDatabase(DATABASENAME,SQLiteDatabase.CREATE_IF_NECESSARY, null);
-		SQLiteStatement insertStatement = instanceDb.compileStatement(INSERTINSTANCEQUERY);
+		SQLiteStatement insertStatement = instanceDb.compileStatement(INSERTINSTANCE);
 		
 		insertStatement.bindString(1, instanceName);
 		insertStatement.bindString(2, hostName);
@@ -70,6 +71,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
 		
 		while (cursor.moveToNext()) {
 			HashMap<String, String> tempMap = new HashMap<String, String>();
+			tempMap.put("Key", Integer.toString(cursor.getInt(0)));
 			tempMap.put("InstanceName", cursor.getString(1));
 			tempMap.put("HostName", "Hostname :"+cursor.getString(2));
 			tempMap.put("PortNumber", "Port :"+cursor.getString(3));
@@ -82,5 +84,29 @@ public class SQLiteManager extends SQLiteOpenHelper{
 		db.close();
 		
 		return list;
+	}
+
+	public Boolean deleteInstancesData(ArrayList<String> itemsToDelete){
+		
+		Boolean status = false;
+		SQLiteDatabase db = getWritableDatabase();
+		SQLiteStatement deleteStatement = db.compileStatement(DELETEINSTANCES);
+		try{
+			
+		for(String itemKey : itemsToDelete){
+			deleteStatement.bindString(1, itemKey);
+			deleteStatement.executeUpdateDelete();
+			}
+			status = true;
+		}
+		catch(SQLException e){
+			status = false;
+		}
+		finally{
+			deleteStatement.close();
+			db.close();
+		}
+		
+		return status;
 	}
 }

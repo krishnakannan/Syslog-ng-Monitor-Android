@@ -215,9 +215,9 @@ public class AddInstanceFragment extends Fragment {
 		return (instanceString != null && !instanceString.equals(""));
 	}
 	
-    public Boolean checkInstanceNameValidity(String passString){
+    public Boolean checkInstanceNameValidity(String instanceName){
 		
-		return (passString != null && !passString.equals(""));
+		return (instanceName != null && !instanceName.equals(""));
 	}
 	
 	public Boolean checkPortValidity(String portString){

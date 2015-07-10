@@ -22,6 +22,8 @@ package com.mobile.syslogng.monitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
@@ -53,7 +55,10 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 public class ViewInstanceFragment extends Fragment{
 
 	public static final String ACTIONBAR_TITLE = "menu_title";
-
+	
+	
+	private Map<Integer,String> itemsDisplayed = new LinkedHashMap<Integer, String>();
+	private ArrayList<String> itemsSelected = new ArrayList<String>();
 	private Context context;
 	
 	ListView listViewInstances;
@@ -78,6 +83,18 @@ public class ViewInstanceFragment extends Fragment{
     	SQLiteManager instanceDataObject = new SQLiteManager(context);
         list = instanceDataObject.getInstancesData();
     	
+        
+        /*
+    	 * Storing the items displayed in the List - Position and Primary Key.
+    	 * Position starting from 0 and incremented. 
+    	 * Position and Corresponding record's primary key is stored as key,value.
+    	 *  
+    	 */
+        Integer iterator = 0;
+        for(HashMap<String,String> temp : list){
+        	itemsDisplayed.put(iterator++, temp.get("Key"));
+        }
+        
     	View rootView = inflater.inflate(R.layout.fragment_view_instance, container, false);
         
     	listViewInstances	 = (ListView) rootView.findViewById(R.id.listview_view_instance);
@@ -123,6 +140,7 @@ public class ViewInstanceFragment extends Fragment{
         		switch (item.getItemId()) {
         		
         			case R.id.delete_list_item:
+        				deleteInstancesData();
         				Toast.makeText(context, "delete", Toast.LENGTH_LONG).show();
         				break;
         			case R.id.edit_list_item:
@@ -147,12 +165,12 @@ public class ViewInstanceFragment extends Fragment{
         	public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
         		if(checked == true){
         			
-        			
+        			itemsSelected.add(Integer.toString(position));
         			listViewInstances.getChildAt(position).setActivated(true);
         			
         		}
         		else if(checked == false){
-        			
+        			itemsSelected.remove(itemsSelected.indexOf(position));
         			listViewInstances.getChildAt(position).setActivated(false);
 
         		}
@@ -160,7 +178,19 @@ public class ViewInstanceFragment extends Fragment{
         	}
         	
         });
+        
+       
+        
         return rootView;
+    }
+    
+    public void deleteInstancesData(){
+    	ArrayList<String> itemsToDelete = new ArrayList<String>();
+    	SQLiteManager sManager = new SQLiteManager(context);
+    	for(String item : itemsSelected){
+    		itemsToDelete.add(itemsDisplayed.get(Integer.parseInt(item))); 
+    	}
+    	sManager.deleteInstancesData(itemsToDelete);
     }
     
     @Override
