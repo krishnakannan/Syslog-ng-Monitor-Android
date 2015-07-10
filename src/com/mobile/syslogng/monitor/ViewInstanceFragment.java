@@ -27,6 +27,7 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Context;
 import android.database.Cursor;
@@ -98,12 +99,8 @@ public class ViewInstanceFragment extends Fragment{
     	View rootView = inflater.inflate(R.layout.fragment_view_instance, container, false);
         
     	listViewInstances	 = (ListView) rootView.findViewById(R.id.listview_view_instance);
+    	listViewInstances.setAdapter(getListViewAdapter(list));
     	
-    	SimpleAdapter adapter = new SimpleAdapter(getActivity().getBaseContext(), list, R.layout.rows_design, 
-    			new String[] { "InstanceName", "HostName", "PortNumber"}, 
-    			new int[] { R.id.textview_instance_name, R.id.textview_hostname, R.id.textview_portnumber });
-    	
-    	listViewInstances.setAdapter(adapter);
     	
     	
     	
@@ -140,11 +137,23 @@ public class ViewInstanceFragment extends Fragment{
         		switch (item.getItemId()) {
         		
         			case R.id.delete_list_item:
-        				deleteInstancesData();
-        				Toast.makeText(context, "delete", Toast.LENGTH_LONG).show();
+        				if(deleteInstancesData()){
+        					reloadCurrentFragment();
+        					mode.finish();
+        					Toast.makeText(context, context.getString(R.string.delete_success), Toast.LENGTH_LONG).show();
+        				}
+        				else{
+        					Toast.makeText(context, context.getString(R.string.delete_failure), Toast.LENGTH_LONG).show();
+        				}
+        				
         				break;
         			case R.id.edit_list_item:
-        				Toast.makeText(context, "edit", Toast.LENGTH_LONG).show();
+        				if(itemsSelected.size() == 1){
+        					
+        				}
+        				else{
+        					Toast.makeText(context, context.getString(R.string.edit_validation_failure), Toast.LENGTH_LONG).show();
+        				}
         				break;
         		
         		}
@@ -170,7 +179,8 @@ public class ViewInstanceFragment extends Fragment{
         			
         		}
         		else if(checked == false){
-        			itemsSelected.remove(itemsSelected.indexOf(position));
+        			Integer removalPosition = itemsSelected.indexOf(position);
+        			itemsSelected.remove(removalPosition);
         			listViewInstances.getChildAt(position).setActivated(false);
 
         		}
@@ -184,13 +194,28 @@ public class ViewInstanceFragment extends Fragment{
         return rootView;
     }
     
-    public void deleteInstancesData(){
+    public Boolean deleteInstancesData(){
     	ArrayList<String> itemsToDelete = new ArrayList<String>();
     	SQLiteManager sManager = new SQLiteManager(context);
     	for(String item : itemsSelected){
     		itemsToDelete.add(itemsDisplayed.get(Integer.parseInt(item))); 
     	}
-    	sManager.deleteInstancesData(itemsToDelete);
+    	return sManager.deleteInstancesData(itemsToDelete);
+    }
+    
+    public SimpleAdapter getListViewAdapter(ArrayList<HashMap<String, String>> list){
+    	return new SimpleAdapter(getActivity().getBaseContext(), list, R.layout.rows_design, 
+    			new String[] { "InstanceName", "HostName", "PortNumber"}, 
+    			new int[] { R.id.textview_instance_name, R.id.textview_hostname, R.id.textview_portnumber });
+    }
+    
+    public void reloadCurrentFragment(){
+    	Bundle args = new Bundle();
+    	Fragment viewInstanceFragment = new ViewInstanceFragment(context);
+    	args.putInt(ViewInstanceFragment.ACTIONBAR_TITLE, 4);
+    	viewInstanceFragment.setArguments(args);
+    	getActivity().getFragmentManager().beginTransaction().replace(R.id.container, viewInstanceFragment).commit();
+    	
     }
     
     @Override
