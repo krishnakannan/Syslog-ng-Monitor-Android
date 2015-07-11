@@ -152,7 +152,12 @@ public class AddUpdateInstanceFragment extends Fragment {
 		        	try{
 		        		certificatePassword = etCertificatePasswordText.getText().toString();
 		        		tempPortNumber = Integer.parseInt(portNumber); // remove tempPortNumber
-		        		insertInstance();
+		        		if(key != null){
+		        			insertUpdateInstance(true);
+		        		}
+		        		else{
+		        			insertUpdateInstance(false);
+		        		}
 		        		editTextInstanceName.setText("");
 		            	editTextHostName.setText("");
 		            	editTextPortNumber.setText("");
@@ -209,15 +214,15 @@ public class AddUpdateInstanceFragment extends Fragment {
 
     }
     
-    public void insertInstance(){
+    public void insertUpdateInstance(Boolean isEdit){
     	
     	SQLiteManager sManager = new SQLiteManager(getActivity().getApplicationContext());
     	if(isClientCertificateUsed){
-            insertStatus = sManager.insertInstance(instanceName, hostName, portNumber, certificateFileName, certificatePassword);
+            insertStatus = sManager.insertUpdateInstance(instanceName, hostName, portNumber, certificateFileName, certificatePassword, key, isEdit);
     	}
     	else{
     		certificateFileName = "";
-    		insertStatus = sManager.insertInstance(instanceName, hostName, portNumber, certificateFileName, certificatePassword);
+    		insertStatus = sManager.insertUpdateInstance(instanceName, hostName, portNumber, certificateFileName, certificatePassword, key, isEdit);
     	}
     	
         

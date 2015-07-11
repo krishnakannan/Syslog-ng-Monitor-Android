@@ -15,4 +15,6 @@ public class SQLiteConstants {
 	static final String DELETEINSTANCES = "DELETE FROM INSTANCE_TABLE WHERE _id = ?";
 	
 	static final String SELECTINSTANCE = "SELECT * FROM INSTANCE_TABLE WHERE _id = ?";
+	
+	static final String UPDATEINSTANCE = "UPDATE INSTANCE_TABLE SET INSTANCE_NAME = ?,INSTANCE_HOSTNAME = ?, PORT_NUMBER = ?, CERT_PATH = ?, CERT_PASSWORD = ? WHERE _id = ?";
 }

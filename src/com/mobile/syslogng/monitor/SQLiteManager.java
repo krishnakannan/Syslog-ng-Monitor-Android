@@ -14,6 +14,7 @@ import static com.mobile.syslogng.monitor.SQLiteConstants.DATABASENAME;
 import static com.mobile.syslogng.monitor.SQLiteConstants.INSERTINSTANCE;
 import static com.mobile.syslogng.monitor.SQLiteConstants.SELECTALLINSTANCES;
 import static com.mobile.syslogng.monitor.SQLiteConstants.DELETEINSTANCES;
+import static com.mobile.syslogng.monitor.SQLiteConstants.UPDATEINSTANCE;
 
 public class SQLiteManager extends SQLiteOpenHelper{
 	
@@ -36,30 +37,54 @@ public class SQLiteManager extends SQLiteOpenHelper{
 		
 	}
 
-	public Boolean insertInstance(String instanceName, String hostName, String portNumber, String certPath, String certPassword)
+	public Boolean insertUpdateInstance(String instanceName, String hostName, String portNumber, String certPath, String certPassword, Integer key, Boolean isEdit)
 	{
 		Boolean status;
-		
 		SQLiteDatabase instanceDb = context.openOrCreateDatabase(DATABASENAME,SQLiteDatabase.CREATE_IF_NECESSARY, null);
-		SQLiteStatement insertStatement = instanceDb.compileStatement(INSERTINSTANCE);
 		
-		insertStatement.bindString(1, instanceName);
-		insertStatement.bindString(2, hostName);
-		insertStatement.bindString(3, portNumber);
-		insertStatement.bindString(4, certPath);
-		insertStatement.bindString(5, certPassword);
+		if(isEdit){
+			SQLiteStatement updateStatement = instanceDb.compileStatement(UPDATEINSTANCE);
+			updateStatement.bindString(1, instanceName);
+			updateStatement.bindString(2, hostName);
+			updateStatement.bindString(3, portNumber);
+			updateStatement.bindString(4, certPath);
+			updateStatement.bindString(5, certPassword);
+			updateStatement.bindString(6, Integer.toString(key));
+			try{
+				updateStatement.executeInsert();
+				status = true;
+			}
+			catch(SQLException e){
+				status = false;
+			}
+			finally{
+				updateStatement.close();
+				instanceDb.close();
+			}
+		}
+		else{
+			
+			SQLiteStatement insertStatement = instanceDb.compileStatement(INSERTINSTANCE);
+			insertStatement.bindString(1, instanceName);
+			insertStatement.bindString(2, hostName);
+			insertStatement.bindString(3, portNumber);
+			insertStatement.bindString(4, certPath);
+			insertStatement.bindString(5, certPassword);
+			
+			try{
+				insertStatement.executeInsert();
+				status = true;
+			}
+			catch(SQLException e){
+				status = false;
+			}
+			finally{
+				insertStatement.close();
+				instanceDb.close();
+			}
+		}
+			
 		
-		try{
-			insertStatement.executeInsert();
-			status = true;
-		}
-		catch(SQLException e){
-			status = false;
-		}
-		finally{
-			insertStatement.close();
-			instanceDb.close();
-		}
 		return status;
 	}
 	

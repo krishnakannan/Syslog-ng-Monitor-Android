@@ -51,14 +51,14 @@ import static com.mobile.syslogng.monitor.SQLiteConstants.CREATEINSTANCETABLE;
 public class MainActivity extends Activity {
 
 	private static final String APP_NAME = "Syslog-ng Monitor";
-	private DrawerLayout mDrawerLayout;
-	private ListView mDrawerList;
+	private static DrawerLayout mDrawerLayout;
+	private static ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 
 	private SharedPreferences preference = null;
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
-	private String[] menuItems;
+	private static String[] menuItems;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -221,11 +221,9 @@ public class MainActivity extends Activity {
 				break;
 		}
 		
-		
-		// update selected item and title, then close the drawer
-		mDrawerList.setItemChecked(position, true);
+		updateDrawer(position);
 		setTitle(menuItems[position]);
-		mDrawerLayout.closeDrawer(mDrawerList);
+		
 	}
 
 	@Override
@@ -253,6 +251,11 @@ public class MainActivity extends Activity {
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
+	public static void updateDrawer(Integer position){
+		
+				mDrawerList.setItemChecked(position, true);
+				mDrawerLayout.closeDrawer(mDrawerList);
+	}
 	
 
 }

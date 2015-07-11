@@ -152,6 +152,7 @@ public class ViewInstanceFragment extends Fragment{
         			case R.id.edit_list_item:
         				if(itemsSelected.size() == 1){
         					loadAddUpdateInstanceFragment(list);
+        					mode.finish();
         				}
         				else{
         					Toast.makeText(context, context.getString(R.string.edit_validation_failure), Toast.LENGTH_LONG).show();
@@ -244,6 +245,7 @@ public class ViewInstanceFragment extends Fragment{
 		args.putInt(AddUpdateInstanceFragment.ACTIONBAR_TITLE, 3);
 		fragment.setArguments(args);
 		getActivity().getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+		MainActivity.updateDrawer(3);
     }
     
     @Override
