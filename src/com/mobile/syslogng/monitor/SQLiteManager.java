@@ -73,8 +73,8 @@ public class SQLiteManager extends SQLiteOpenHelper{
 			HashMap<String, String> tempMap = new HashMap<String, String>();
 			tempMap.put("Key", Integer.toString(cursor.getInt(0)));
 			tempMap.put("InstanceName", cursor.getString(1));
-			tempMap.put("HostName", "Hostname :"+cursor.getString(2));
-			tempMap.put("PortNumber", "Port :"+cursor.getString(3));
+			tempMap.put("HostName", cursor.getString(2));
+			tempMap.put("PortNumber",cursor.getString(3));
 			tempMap.put("CertPath", cursor.getString(4));
 			tempMap.put("CertPass", cursor.getString(5));
 			list.add(tempMap);

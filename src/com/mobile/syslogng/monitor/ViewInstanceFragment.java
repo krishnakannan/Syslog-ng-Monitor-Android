@@ -75,11 +75,13 @@ public class ViewInstanceFragment extends Fragment{
         // Empty constructor required for fragment subclasses
     }
 
+    ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
     	
-    	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    	
     	
     	SQLiteManager instanceDataObject = new SQLiteManager(context);
         list = instanceDataObject.getInstancesData();
@@ -149,7 +151,7 @@ public class ViewInstanceFragment extends Fragment{
         				break;
         			case R.id.edit_list_item:
         				if(itemsSelected.size() == 1){
-        					
+        					loadAddUpdateInstanceFragment(list);
         				}
         				else{
         					Toast.makeText(context, context.getString(R.string.edit_validation_failure), Toast.LENGTH_LONG).show();
@@ -216,6 +218,32 @@ public class ViewInstanceFragment extends Fragment{
     	viewInstanceFragment.setArguments(args);
     	getActivity().getFragmentManager().beginTransaction().replace(R.id.container, viewInstanceFragment).commit();
     	
+    }
+    
+    public void loadAddUpdateInstanceFragment(ArrayList<HashMap<String,String>> instancesList){
+    	
+    	String key = null;
+    	String instanceName = null;
+    	String hostName = null;
+    	String portNumber = null;
+    	String certificateFileName = null;
+    	String certificatePassword = null;
+    	
+    	for(HashMap<String,String> instanceData : instancesList){
+    		key = instanceData.get("Key");
+    		instanceName = instanceData.get("InstanceName");
+    		hostName = instanceData.get("HostName");
+    		portNumber = instanceData.get("PortNumber");
+    		certificateFileName = instanceData.get("CertPath");
+    		certificatePassword = instanceData.get("CertPass");
+    		Log.i("instanceData", instanceData.toString());
+    	}
+    	
+    	Bundle args = new Bundle();
+    	Fragment fragment = new AddUpdateInstanceFragment(context, instanceName, hostName, portNumber, certificateFileName, certificatePassword, key);
+		args.putInt(AddUpdateInstanceFragment.ACTIONBAR_TITLE, 3);
+		fragment.setArguments(args);
+		getActivity().getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }
     
     @Override

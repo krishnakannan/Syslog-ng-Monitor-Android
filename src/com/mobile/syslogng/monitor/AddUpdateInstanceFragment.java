@@ -27,6 +27,7 @@ import java.util.List;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,26 +41,42 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class AddInstanceFragment extends Fragment {
+public class AddUpdateInstanceFragment extends Fragment {
     public static final String ACTIONBAR_TITLE = "menu_title";
     public Boolean insertStatus = false;
     
     private Context context;
 	private Spinner spinnerClientCertificate;
+	private CheckBox cbIncludeCertificate;
 	private List<String> fileList = new ArrayList<String>();
-	private EditText etInstanceText;
-	private EditText etPortText;
+	private EditText editTextHostName;
+	private EditText editTextPortNumber;
 	private EditText etCertificatePasswordText;
-	private EditText etInstanceName;
+	private EditText editTextInstanceName;
 	private Boolean isClientCertificateUsed = false;
 	private String certificateFileName;
+	private String instanceName;
+	private String hostName;
+	private String portNumber;
+	private String certificatePassword = "";
+    private ArrayAdapter<String> certAdapter;
+    private Integer key;
     
-    public AddInstanceFragment() {
+    public AddUpdateInstanceFragment() {
         // Empty constructor required for fragment subclasses
     }
     
-    public AddInstanceFragment(Context context){
+    public AddUpdateInstanceFragment(Context context, String instanceName, String hostName, String portNumber, String certificateFileName, String certificatePassword, String key){
     	this.context = context;
+    	this.instanceName = instanceName;
+    	this.hostName = hostName;
+    	this.portNumber = portNumber;
+    	this.certificateFileName = certificateFileName;
+    	this.certificatePassword = certificatePassword;
+    	if(key != null){
+    		this.key = Integer.parseInt(key);
+    	}
+    	
     }
 
     @Override
@@ -77,7 +94,7 @@ public class AddInstanceFragment extends Fragment {
         }
         
         spinnerClientCertificate = (Spinner) rootView.findViewById(R.id.ai_spinner_certificate);
-        ArrayAdapter<String> certAdapter = new ArrayAdapter<String>(getActivity(),
+        certAdapter = new ArrayAdapter<String>(getActivity(),
 		        android.R.layout.simple_spinner_item, fileList);
         certAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerClientCertificate.setAdapter(certAdapter);
@@ -87,7 +104,9 @@ public class AddInstanceFragment extends Fragment {
         spinnerClientCertificate.setVisibility(View.INVISIBLE);
         etCertificatePasswordText.setVisibility(View.INVISIBLE);
         
-       
+        
+        
+        
         
         
         getActivity().setTitle(actionbarTitle);
@@ -97,8 +116,8 @@ public class AddInstanceFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        cbIncludeCertificate = (CheckBox) getActivity().findViewById(R.id.ai_cb_include_certificate);
         
-        CheckBox cbIncludeCertificate = (CheckBox) getActivity().findViewById(R.id.ai_cb_include_certificate);
 		if(fileList.isEmpty()){
 			cbIncludeCertificate.setEnabled(false);
 		}
@@ -106,19 +125,22 @@ public class AddInstanceFragment extends Fragment {
 			cbIncludeCertificate.setEnabled(true);
 		}
         
-        final EditText editTextInstanceName = (EditText) getActivity().findViewById(R.id.ai_et_instance_name);
-        final EditText editTextHostName = (EditText) getActivity().findViewById(R.id.ai_et_instance_input);
-        final EditText editTextPortNumber = (EditText) getActivity().findViewById(R.id.ai_et_port_input);
+		
+		
+        editTextInstanceName = (EditText) getActivity().findViewById(R.id.ai_et_instance_name);
+        editTextHostName = (EditText) getActivity().findViewById(R.id.ai_et_instance_input);
+        editTextPortNumber = (EditText) getActivity().findViewById(R.id.ai_et_port_input);
         
+        
+        if(key != null){
+        	populateAllValues();
+        }
         
         Button btnAddInstance = (Button) getActivity().findViewById(R.id.ai_btn_save_instance);
         btnAddInstance.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				
-				String instanceName;
-		        String hostName;
-		        String portNumber;
-		        String certificatePassword = "";
+				
 		        Integer tempPortNumber;
 		        
 		        instanceName = editTextInstanceName.getText().toString();
@@ -129,8 +151,8 @@ public class AddInstanceFragment extends Fragment {
 		        	
 		        	try{
 		        		certificatePassword = etCertificatePasswordText.getText().toString();
-		        		tempPortNumber = Integer.parseInt(portNumber);
-		        		insertInstance(instanceName, hostName, portNumber, certificateFileName, certificatePassword);
+		        		tempPortNumber = Integer.parseInt(portNumber); // remove tempPortNumber
+		        		insertInstance();
 		        		editTextInstanceName.setText("");
 		            	editTextHostName.setText("");
 		            	editTextPortNumber.setText("");
@@ -187,15 +209,15 @@ public class AddInstanceFragment extends Fragment {
 
     }
     
-    public void insertInstance(String instanceName, String hostName, String portNumber, String certPath, String certPassword){
+    public void insertInstance(){
     	
     	SQLiteManager sManager = new SQLiteManager(getActivity().getApplicationContext());
     	if(isClientCertificateUsed){
-            insertStatus = sManager.insertInstance(instanceName, hostName, portNumber, certPath, certPassword);
+            insertStatus = sManager.insertInstance(instanceName, hostName, portNumber, certificateFileName, certificatePassword);
     	}
     	else{
-    		certPath = "";
-    		insertStatus = sManager.insertInstance(instanceName, hostName, portNumber, certPath, certPassword);
+    		certificateFileName = "";
+    		insertStatus = sManager.insertInstance(instanceName, hostName, portNumber, certificateFileName, certificatePassword);
     	}
     	
         
@@ -208,6 +230,24 @@ public class AddInstanceFragment extends Fragment {
         else{
         	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.insert_instance_failure) , Toast.LENGTH_LONG).show();
         }
+    }
+    
+    public void populateAllValues(){
+    	    	
+    	editTextInstanceName.setText(instanceName);
+    	editTextHostName.setText(hostName);
+    	editTextPortNumber.setText(portNumber);
+    	
+    	spinnerClientCertificate.setVisibility(View.VISIBLE);
+        etCertificatePasswordText.setVisibility(View.VISIBLE);
+    	
+    	if(certificateFileName != null && !certificateFileName.equals("")){
+    		isClientCertificateUsed = true;
+    		cbIncludeCertificate.setChecked(true);
+    		spinnerClientCertificate.setSelection(certAdapter.getPosition("certificateFileName"));
+    		etCertificatePasswordText.setText(certificatePassword);
+    	}
+    	
     }
     
     public Boolean checkHostValidity(String instanceString){
