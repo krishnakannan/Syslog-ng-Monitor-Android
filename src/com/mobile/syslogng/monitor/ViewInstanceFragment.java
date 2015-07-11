@@ -151,7 +151,7 @@ public class ViewInstanceFragment extends Fragment{
         				break;
         			case R.id.edit_list_item:
         				if(itemsSelected.size() == 1){
-        					loadAddUpdateInstanceFragment(list);
+        					loadAddUpdateInstanceFragment(list.get(Integer.parseInt(itemsSelected.get(0))));
         					mode.finish();
         				}
         				else{
@@ -182,8 +182,8 @@ public class ViewInstanceFragment extends Fragment{
         			
         		}
         		else if(checked == false){
-        			Integer removalPosition = itemsSelected.indexOf(position);
-        			itemsSelected.remove(removalPosition);
+        			//Integer removalPosition = itemsSelected.indexOf();
+        			itemsSelected.remove(Integer.toString(position));
         			listViewInstances.getChildAt(position).setActivated(false);
 
         		}
@@ -221,7 +221,7 @@ public class ViewInstanceFragment extends Fragment{
     	
     }
     
-    public void loadAddUpdateInstanceFragment(ArrayList<HashMap<String,String>> instancesList){
+    public void loadAddUpdateInstanceFragment(HashMap<String, String> instanceData){
     	
     	String key = null;
     	String instanceName = null;
@@ -230,7 +230,7 @@ public class ViewInstanceFragment extends Fragment{
     	String certificateFileName = null;
     	String certificatePassword = null;
     	
-    	for(HashMap<String,String> instanceData : instancesList){
+    	
     		key = instanceData.get("Key");
     		instanceName = instanceData.get("InstanceName");
     		hostName = instanceData.get("HostName");
@@ -238,8 +238,8 @@ public class ViewInstanceFragment extends Fragment{
     		certificateFileName = instanceData.get("CertPath");
     		certificatePassword = instanceData.get("CertPass");
     		Log.i("instanceData", instanceData.toString());
-    	}
     	
+    	itemsSelected.clear();
     	Bundle args = new Bundle();
     	Fragment fragment = new AddUpdateInstanceFragment(context, instanceName, hostName, portNumber, certificateFileName, certificatePassword, key);
 		args.putInt(AddUpdateInstanceFragment.ACTIONBAR_TITLE, 3);
