@@ -21,15 +21,20 @@ package com.mobile.syslogng.monitor;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
@@ -45,19 +50,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.MultiChoiceModeListener;
 
 
-public class ViewInstanceFragment extends Fragment{
+public class ViewInstanceFragment extends Fragment implements ICommandCallBack{
 
 	public static final String ACTIONBAR_TITLE = "menu_title";
 	
-	
+	private String command;
 	private Map<Integer,String> itemsDisplayed = new LinkedHashMap<Integer, String>();
 	private ArrayList<String> itemsSelected = new ArrayList<String>();
 	private Context context;
@@ -192,7 +200,45 @@ public class ViewInstanceFragment extends Fragment{
         	
         });
         
-       
+        this.listViewInstances.setOnItemClickListener(new OnItemClickListener(){
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+			
+			final List<String> commandList = Arrays.asList(context.getResources().getStringArray(R.array.command_array));
+			
+			
+			AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+			dialog.setTitle("Select Command");
+		    
+			dialog.setSingleChoiceItems(R.array.command_array, -1, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					command = commandList.get(which);					
+				}
+			});
+			
+			dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int which) { 
+		        	executeCommandTask(list.get(position), command);
+		        }
+		     });
+		    dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					
+				}
+			});
+			
+		    
+		     
+		    dialog.setIconAttribute(android.R.attr.alertDialogIcon);
+		    dialog.show();
+			
+		}
+    	   
+       });
         
         return rootView;
     }
@@ -211,6 +257,8 @@ public class ViewInstanceFragment extends Fragment{
     			new String[] { "InstanceName", "HostName", "PortNumber"}, 
     			new int[] { R.id.textview_instance_name, R.id.textview_hostname, R.id.textview_portnumber });
     }
+    
+    
     
     public void reloadCurrentFragment(){
     	Bundle args = new Bundle();
@@ -254,6 +302,58 @@ public class ViewInstanceFragment extends Fragment{
         
     }
 
+	
+    
+    
+    public void executeCommandTask(HashMap<String,String> instanceDataClicked, String command){
+    	if(instanceDataClicked.get("CertPath") != null && !instanceDataClicked.get("CertPath").equals("")){
+    		CommandTask commandTask = new CommandTask(this, getActivity(), instanceDataClicked.get("HostName"), Integer.parseInt(instanceDataClicked.get("PortNumber")), command, instanceDataClicked.get("CertPath"), instanceDataClicked.get("CertPass"));
+			commandTask.execute();
+    	}
+    	else{
+    		CommandTask commandTask = new CommandTask(this, getActivity(), instanceDataClicked.get("HostName"), Integer.parseInt(instanceDataClicked.get("PortNumber")), command, null, null);
+			commandTask.execute();
+    	}
+    }
+    
+    @Override
+	public void commandExecutionStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void commandExecutionEnd(String result, Boolean isException) {
+		showResult(result, isException);	
+	}
+
+	public void showResult(String message, Boolean isException){
+		
+		if(isException){
+			new AlertDialog.Builder(getActivity())
+		    .setTitle("Error")
+		    .setMessage(message)
+		    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int which) { 
+		            
+		        }
+		     }).setIconAttribute(android.R.attr.alertDialogIcon)
+		     .show();	
+		}
+		else{
+			new AlertDialog.Builder(getActivity())
+		    .setTitle("Result")
+		    .setMessage(message)
+		    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int which) { 
+		            
+		        }
+		     }).setIconAttribute(android.R.attr.icon)
+		     .show();
+		}
+		
+		
+	}
 
 	
 
