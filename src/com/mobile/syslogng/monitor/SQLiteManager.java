@@ -11,6 +11,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
 
 public class SQLiteManager extends SQLiteOpenHelper{
@@ -42,12 +43,9 @@ static final String DATABASENAME = "instances.db";
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		
-		SQLiteDatabase instanceDb = context.openOrCreateDatabase("instances.db",SQLiteDatabase.CREATE_IF_NECESSARY, null);
+		db.execSQL(CREATETABLE);
 		
-		instanceDb.execSQL("DROP TABLE IF EXISTS" + " INSTANCE_TABLE"); // Please Remove it during Production
-		instanceDb.execSQL(CREATETABLE);
-		
-		
+		Log.i("CREATE DB", "in onCreate Method");
 	}
 
 	@Override
@@ -64,8 +62,13 @@ static final String DATABASENAME = "instances.db";
 			insertStatement.bindString(1, syslogng.getSyslogngName());
 			insertStatement.bindString(2, syslogng.getHostName());
 			insertStatement.bindString(3, syslogng.getPortNumber());
-			insertStatement.bindString(4, syslogng.getCertificateFileName());
-			insertStatement.bindString(5, syslogng.getCertificatePassword());
+			if(syslogng.getCertificateFileName() != null){
+				insertStatement.bindString(4, syslogng.getCertificateFileName());
+			}
+			if(syslogng.getCertificatePassword() != null){
+				insertStatement.bindString(5, syslogng.getCertificatePassword());
+			}
+			
 			
 			try{
 				insertStatement.executeInsert();
@@ -90,8 +93,12 @@ static final String DATABASENAME = "instances.db";
 		updateStatement.bindString(1, syslogng.getSyslogngName());
 		updateStatement.bindString(2, syslogng.getHostName());
 		updateStatement.bindString(3, syslogng.getPortNumber());
-		updateStatement.bindString(4, syslogng.getCertificateFileName());
-		updateStatement.bindString(5, syslogng.getCertificatePassword());
+		if(syslogng.getCertificateFileName() != null){
+			updateStatement.bindString(4, syslogng.getCertificateFileName());
+		}
+		if(syslogng.getCertificatePassword() != null){
+			updateStatement.bindString(5, syslogng.getCertificatePassword());
+		}
 		updateStatement.bindString(6, syslogng.getKey());
 		try{
 			updateStatement.executeUpdateDelete();
