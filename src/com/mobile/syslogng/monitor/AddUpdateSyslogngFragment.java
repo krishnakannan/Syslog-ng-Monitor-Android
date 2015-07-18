@@ -67,15 +67,16 @@ public class AddUpdateSyslogngFragment extends Fragment {
     
     public AddUpdateSyslogngFragment(Context context, Syslogng syslogng){
     	this.context = context;
-    	this.instanceName = syslogng.getSyslogngName();
-    	this.hostName = syslogng.getHostName();
-    	this.portNumber = syslogng.getPortNumber();
-    	this.certificateFileName = syslogng.getCertificateFileName();
-    	this.certificatePassword = syslogng.getCertificatePassword();
-    	if(key != null){
-    		this.key = Integer.parseInt(syslogng.getKey());
+    	if(syslogng != null){
+    		this.instanceName = syslogng.getSyslogngName();
+        	this.hostName = syslogng.getHostName();
+        	this.portNumber = syslogng.getPortNumber();
+        	this.certificateFileName = syslogng.getCertificateFileName();
+        	this.certificatePassword = syslogng.getCertificatePassword();
+        	if(key != null){
+        		this.key = Integer.parseInt(syslogng.getKey());
+        	}
     	}
-    	
     }
 
     @Override
@@ -134,6 +135,22 @@ public class AddUpdateSyslogngFragment extends Fragment {
         if(key != null){
         	populateAllValues();
         }
+        
+        Button btnImportCertificate = (Button) getActivity().findViewById(R.id.ai_btn_import_certificate);
+        btnImportCertificate.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				Bundle args = new Bundle();
+		    	Fragment fragment = new ImportCertificateFragment(context);
+				args.putInt(AddUpdateSyslogngFragment.ACTIONBAR_TITLE, 1);
+				fragment.setArguments(args);
+				getActivity().getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+				MainActivity.updateDrawer(1);
+				
+			}
+		});
         
         Button btnAddInstance = (Button) getActivity().findViewById(R.id.ai_btn_save_instance);
         btnAddInstance.setOnClickListener(new View.OnClickListener() {

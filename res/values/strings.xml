@@ -20,6 +20,7 @@
     <string name="home">Welcome to Syslog-ng Monitor application \n Start monitoring by adding the instances. </string>
     <string name="view_instances">View Instances</string>
     <string name="about">About</string>
+    <string name="import_certificate">Import Certificate</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="drawer_open">Open navigation drawer</string>

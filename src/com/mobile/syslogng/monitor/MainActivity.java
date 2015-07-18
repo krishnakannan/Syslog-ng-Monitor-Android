@@ -19,6 +19,8 @@
 package com.mobile.syslogng.monitor;
 
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -120,7 +122,15 @@ public class MainActivity extends Activity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		if (savedInstanceState == null) {
-			selectItem(0);
+			SQLiteManager sManager = new SQLiteManager(getApplicationContext());
+			ArrayList<Syslogng> savedData = sManager.getInstancesData();
+			if(savedData.isEmpty()){
+				selectItem(0);
+			}
+			else{
+				selectItem(3);
+			}
+			
 		}
 	}
 
@@ -173,8 +183,8 @@ public class MainActivity extends Activity {
 		switch(caseNumber)
 		{
 			case 1:
-				fragment = new HomeFragment();
-				args.putInt(HomeFragment.ACTIONBAR_TITLE, position);
+				fragment = new WelcomeFragment(getApplicationContext());
+				args.putInt(WelcomeFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 				break;
