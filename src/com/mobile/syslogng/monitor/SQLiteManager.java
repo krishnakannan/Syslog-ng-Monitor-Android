@@ -1,9 +1,9 @@
 package com.mobile.syslogng.monitor;
 
-import static com.mobile.syslogng.monitor.SQLiteManager.CREATETABLE;
+
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
 
 import android.content.Context;
 import android.database.Cursor;

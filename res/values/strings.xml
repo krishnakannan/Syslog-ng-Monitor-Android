@@ -31,7 +31,6 @@
 
     <string-array name="menu_array">
         <item>Home</item>
-        <item>Run Command</item>
         <item>Import Certificate</item>
         <item>Add/Update Instance</item>
         <item>Saved Instances</item>

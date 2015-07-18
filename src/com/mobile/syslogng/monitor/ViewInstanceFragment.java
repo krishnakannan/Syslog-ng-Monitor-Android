@@ -279,25 +279,11 @@ public class ViewInstanceFragment extends Fragment implements ICommandCallBack{
     
     public void loadAddUpdateInstanceFragment(Syslogng syslogng){
     	
-    	String key = null;
-    	String instanceName = null;
-    	String hostName = null;
-    	String portNumber = null;
-    	String certificateFileName = null;
-    	String certificatePassword = null;
-    	
-    	
-    		key = syslogng.getKey();
-    		instanceName = syslogng.getSyslogngName();
-    		hostName = syslogng.getHostName();
-    		portNumber = syslogng.getPortNumber();
-    		certificateFileName = syslogng.getCertificateFileName();
-    		certificatePassword = syslogng.getCertificatePassword();
     		Log.i("instanceData", syslogng.toString());
     	
     	itemsSelected.clear();
     	Bundle args = new Bundle();
-    	Fragment fragment = new AddUpdateInstanceFragment(context, instanceName, hostName, portNumber, certificateFileName, certificatePassword, key);
+    	Fragment fragment = new AddUpdateInstanceFragment(context, syslogng);
 		args.putInt(AddUpdateInstanceFragment.ACTIONBAR_TITLE, 3);
 		fragment.setArguments(args);
 		getActivity().getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();

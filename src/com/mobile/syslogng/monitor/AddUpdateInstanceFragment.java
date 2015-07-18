@@ -27,7 +27,6 @@ import java.util.List;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,15 +65,15 @@ public class AddUpdateInstanceFragment extends Fragment {
         // Empty constructor required for fragment subclasses
     }
     
-    public AddUpdateInstanceFragment(Context context, String instanceName, String hostName, String portNumber, String certificateFileName, String certificatePassword, String key){
+    public AddUpdateInstanceFragment(Context context, Syslogng syslogng){
     	this.context = context;
-    	this.instanceName = instanceName;
-    	this.hostName = hostName;
-    	this.portNumber = portNumber;
-    	this.certificateFileName = certificateFileName;
-    	this.certificatePassword = certificatePassword;
+    	this.instanceName = syslogng.getSyslogngName();
+    	this.hostName = syslogng.getHostName();
+    	this.portNumber = syslogng.getPortNumber();
+    	this.certificateFileName = syslogng.getCertificateFileName();
+    	this.certificatePassword = syslogng.getCertificatePassword();
     	if(key != null){
-    		this.key = Integer.parseInt(key);
+    		this.key = Integer.parseInt(syslogng.getKey());
     	}
     	
     }

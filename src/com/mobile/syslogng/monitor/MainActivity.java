@@ -194,7 +194,7 @@ public class MainActivity extends Activity {
 				break;
 				
 			case 4:
-				fragment = new AddUpdateInstanceFragment(getApplicationContext(), null, null, null, null, null, null);
+				fragment = new AddUpdateInstanceFragment(getApplicationContext(), null);
 				args.putInt(AddUpdateInstanceFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
