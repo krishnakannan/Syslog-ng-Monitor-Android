@@ -46,7 +46,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import static com.mobile.syslogng.monitor.SQLiteConstants.CREATEINSTANCETABLE;
+import static com.mobile.syslogng.monitor.SQLiteManager.CREATETABLE;
 
 public class MainActivity extends Activity {
 
@@ -78,14 +78,6 @@ public class MainActivity extends Activity {
 		{
 			FileManager fManager = new FileManager(getApplicationContext());			
 			fManager.createCertificateDirectory();	
-			
-			
-			SQLiteDatabase instanceDb = openOrCreateDatabase("instances.db",SQLiteDatabase.CREATE_IF_NECESSARY, null);
-			
-			instanceDb.execSQL("DROP TABLE IF EXISTS" + " INSTANCE_TABLE"); // Please Remove it during Production
-			instanceDb.execSQL(CREATEINSTANCETABLE);
-			
-			
 			preference.edit().putBoolean("firstRun", false).commit();
 		}
 		

@@ -74,15 +74,15 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 	
 
 	
-	public CommandTask(ICommandCallBack callBack, Context context, String hostName, Integer portNumber, String command, String certificateFileName, String certificatePassword){
+	public CommandTask(ICommandCallBack callBack, Context context, Syslogng syslogng, String command){
 		
 		this.callBack = callBack;
 		this.context = context;
-		this.hostName = hostName;
-		this.portNumber = portNumber;
+		this.hostName = syslogng.getHostName();
+		this.portNumber = Integer.parseInt(syslogng.getPortNumber());
 		this.command = command;
-		this.certificateFileName = certificateFileName;
-		this.certificatePassword = certificatePassword;
+		this.certificateFileName = syslogng.getCertificateFileName();
+		this.certificatePassword = syslogng.getCertificatePassword();
 		
 		
 	}

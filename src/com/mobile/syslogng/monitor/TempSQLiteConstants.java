@@ -1,6 +1,6 @@
 package com.mobile.syslogng.monitor;
 
-public class SQLiteConstants {
+public class TempSQLiteConstants {
 
 	static final String DATABASENAME = "instances.db";
 	

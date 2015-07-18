@@ -266,12 +266,20 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 	//Method for execute the command
 	
 	public void executeCommandTask(){
+		
+		Syslogng syslogng = new Syslogng();
+		syslogng.setHostName(instanceString);
+		syslogng.setPortNumber(Integer.toString(portNumber));
+		syslogng.setCertificateFileName(certificateFileName);
+		syslogng.setCertificatePassword(passString);
+		
 		if(isClientCertificateUsed){
-			CommandTask commandTask = new CommandTask(this, getActivity(), instanceString, portNumber, command, certificateFileName, passString);
+			
+			CommandTask commandTask = new CommandTask(this, getActivity(), syslogng, command);
 			commandTask.execute();
 		}
 		else{
-			CommandTask commandTask = new CommandTask(this, getActivity(), instanceString, portNumber, command, null, null);
+			CommandTask commandTask = new CommandTask(this, getActivity(), syslogng, command);
 			commandTask.execute();
 		}
 		

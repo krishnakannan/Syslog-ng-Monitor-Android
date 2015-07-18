@@ -1,5 +1,7 @@
 package com.mobile.syslogng.monitor;
 
+import static com.mobile.syslogng.monitor.SQLiteManager.CREATETABLE;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,14 +11,26 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
-import static com.mobile.syslogng.monitor.SQLiteConstants.DATABASEVERSION;
-import static com.mobile.syslogng.monitor.SQLiteConstants.DATABASENAME;
-import static com.mobile.syslogng.monitor.SQLiteConstants.INSERTINSTANCE;
-import static com.mobile.syslogng.monitor.SQLiteConstants.SELECTALLINSTANCES;
-import static com.mobile.syslogng.monitor.SQLiteConstants.DELETEINSTANCES;
-import static com.mobile.syslogng.monitor.SQLiteConstants.UPDATEINSTANCE;
+
 
 public class SQLiteManager extends SQLiteOpenHelper{
+	
+	
+static final String DATABASENAME = "instances.db";
+	
+	static final Integer DATABASEVERSION = 1;
+	
+	static final String CREATETABLE = "CREATE TABLE if not exists INSTANCE_TABLE(_id INTEGER PRIMARY KEY, INSTANCE_NAME TEXT, INSTANCE_HOSTNAME TEXT, PORT_NUMBER TEXT, CERT_PATH TEXT, CERT_PASSWORD TEXT)";
+	
+	static final String SELECTALL = "SELECT * FROM INSTANCE_TABLE";
+	
+	static final String INSERT = "INSERT INTO INSTANCE_TABLE(INSTANCE_NAME,INSTANCE_HOSTNAME,PORT_NUMBER,CERT_PATH,CERT_PASSWORD) VALUES(?, ?, ?, ?, ?)";
+	
+	static final String DELETE = "DELETE FROM INSTANCE_TABLE WHERE _id = ?";
+	
+	static final String SELECT = "SELECT * FROM INSTANCE_TABLE WHERE _id = ?";
+	
+	static final String UPDATE = "UPDATE INSTANCE_TABLE SET INSTANCE_NAME = ?,INSTANCE_HOSTNAME = ?, PORT_NUMBER = ?, CERT_PATH = ?, CERT_PASSWORD = ? WHERE _id = ?";
 	
 	Context context;
 	
@@ -27,7 +41,12 @@ public class SQLiteManager extends SQLiteOpenHelper{
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
+		
+		SQLiteDatabase instanceDb = context.openOrCreateDatabase("instances.db",SQLiteDatabase.CREATE_IF_NECESSARY, null);
+		
+		instanceDb.execSQL("DROP TABLE IF EXISTS" + " INSTANCE_TABLE"); // Please Remove it during Production
+		instanceDb.execSQL(CREATETABLE);
+		
 		
 	}
 
@@ -37,39 +56,16 @@ public class SQLiteManager extends SQLiteOpenHelper{
 		
 	}
 
-	public Boolean insertUpdateInstance(String instanceName, String hostName, String portNumber, String certPath, String certPassword, Integer key, Boolean isEdit)
+	public Boolean insertSyslogng(Syslogng syslogng)
 	{
 		Boolean status;
-		SQLiteDatabase instanceDb = context.openOrCreateDatabase(DATABASENAME,SQLiteDatabase.CREATE_IF_NECESSARY, null);
-		
-		if(isEdit){
-			SQLiteStatement updateStatement = instanceDb.compileStatement(UPDATEINSTANCE);
-			updateStatement.bindString(1, instanceName);
-			updateStatement.bindString(2, hostName);
-			updateStatement.bindString(3, portNumber);
-			updateStatement.bindString(4, certPath);
-			updateStatement.bindString(5, certPassword);
-			updateStatement.bindString(6, Integer.toString(key));
-			try{
-				updateStatement.executeInsert();
-				status = true;
-			}
-			catch(SQLException e){
-				status = false;
-			}
-			finally{
-				updateStatement.close();
-				instanceDb.close();
-			}
-		}
-		else{
-			
-			SQLiteStatement insertStatement = instanceDb.compileStatement(INSERTINSTANCE);
-			insertStatement.bindString(1, instanceName);
-			insertStatement.bindString(2, hostName);
-			insertStatement.bindString(3, portNumber);
-			insertStatement.bindString(4, certPath);
-			insertStatement.bindString(5, certPassword);
+		SQLiteDatabase db = getWritableDatabase();
+			SQLiteStatement insertStatement = db.compileStatement(INSERT);
+			insertStatement.bindString(1, syslogng.getSyslogngName());
+			insertStatement.bindString(2, syslogng.getHostName());
+			insertStatement.bindString(3, syslogng.getPortNumber());
+			insertStatement.bindString(4, syslogng.getCertificateFileName());
+			insertStatement.bindString(5, syslogng.getCertificatePassword());
 			
 			try{
 				insertStatement.executeInsert();
@@ -80,29 +76,55 @@ public class SQLiteManager extends SQLiteOpenHelper{
 			}
 			finally{
 				insertStatement.close();
-				instanceDb.close();
-			}
-		}
+				db.close();
+			}	
 			
+		return status;
+	}
+	
+	public Boolean updateSyslogng(Syslogng syslogng){
+		Boolean status;
+		SQLiteDatabase db = getWritableDatabase();
+		
+		SQLiteStatement updateStatement = db.compileStatement(UPDATE);
+		updateStatement.bindString(1, syslogng.getSyslogngName());
+		updateStatement.bindString(2, syslogng.getHostName());
+		updateStatement.bindString(3, syslogng.getPortNumber());
+		updateStatement.bindString(4, syslogng.getCertificateFileName());
+		updateStatement.bindString(5, syslogng.getCertificatePassword());
+		updateStatement.bindString(6, syslogng.getKey());
+		try{
+			updateStatement.executeUpdateDelete();
+			status = true;
+		}
+		catch(SQLException e){
+			status = false;
+		}
+		finally{
+			updateStatement.close();
+			db.close();
+		}
+		
 		
 		return status;
 	}
 	
-	public ArrayList<HashMap<String,String>> getInstancesData()
+	public ArrayList<Syslogng> getInstancesData()
 	{
 		SQLiteDatabase db = getReadableDatabase();
-		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-		Cursor cursor = db.rawQuery(SELECTALLINSTANCES, null);
+		ArrayList<Syslogng> list = new ArrayList<Syslogng>();
+		
+		Cursor cursor = db.rawQuery(SELECTALL, null);
 		
 		while (cursor.moveToNext()) {
-			HashMap<String, String> tempMap = new HashMap<String, String>();
-			tempMap.put("Key", Integer.toString(cursor.getInt(0)));
-			tempMap.put("InstanceName", cursor.getString(1));
-			tempMap.put("HostName", cursor.getString(2));
-			tempMap.put("PortNumber",cursor.getString(3));
-			tempMap.put("CertPath", cursor.getString(4));
-			tempMap.put("CertPass", cursor.getString(5));
-			list.add(tempMap);
+			Syslogng syslogng = new Syslogng();
+			syslogng.setKey(Integer.toString(cursor.getInt(0)));
+			syslogng.setSyslogngName(cursor.getString(1));
+			syslogng.setHostName(cursor.getString(2));
+			syslogng.setPortNumber(cursor.getString(3));
+			syslogng.setCertificateFileName(cursor.getString(4));
+			syslogng.setCertificatePassword(cursor.getString(5));
+			list.add(syslogng);
 		}
 		
 		cursor.close();
@@ -115,7 +137,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
 		
 		Boolean status = false;
 		SQLiteDatabase db = getWritableDatabase();
-		SQLiteStatement deleteStatement = db.compileStatement(DELETEINSTANCES);
+		SQLiteStatement deleteStatement = db.compileStatement(DELETE);
 		try{
 			
 		for(String itemKey : itemsToDelete){

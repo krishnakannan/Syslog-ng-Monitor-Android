@@ -83,7 +83,7 @@ public class ViewInstanceFragment extends Fragment implements ICommandCallBack{
         // Empty constructor required for fragment subclasses
     }
 
-    ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    ArrayList<Syslogng> list = new ArrayList<Syslogng>();
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,8 +102,8 @@ public class ViewInstanceFragment extends Fragment implements ICommandCallBack{
     	 *  
     	 */
         Integer iterator = 0;
-        for(HashMap<String,String> temp : list){
-        	itemsDisplayed.put(iterator++, temp.get("Key"));
+        for(Syslogng temp : list){
+        	itemsDisplayed.put(iterator++, temp.getKey());
         }
         
     	View rootView = inflater.inflate(R.layout.fragment_view_instance, container, false);
@@ -252,8 +252,16 @@ public class ViewInstanceFragment extends Fragment implements ICommandCallBack{
     	return sManager.deleteInstancesData(itemsToDelete);
     }
     
-    public SimpleAdapter getListViewAdapter(ArrayList<HashMap<String, String>> list){
-    	return new SimpleAdapter(getActivity().getBaseContext(), list, R.layout.rows_design, 
+    public SimpleAdapter getListViewAdapter(ArrayList<Syslogng> list){
+    	ArrayList<HashMap<String,String>> dataList = new ArrayList<HashMap<String, String>>();
+    	for(Syslogng items : list){
+    		 HashMap<String,String> dataListItem = new HashMap<String,String>();
+    		 dataListItem.put("InstanceName", items.getSyslogngName());
+    		 dataListItem.put("HostName", items.getHostName());
+    		 dataListItem.put("PortNumber", items.getPortNumber());
+    		 dataList.add(dataListItem);
+    	}
+    	return new SimpleAdapter(getActivity().getBaseContext(), dataList, R.layout.rows_design, 
     			new String[] { "InstanceName", "HostName", "PortNumber"}, 
     			new int[] { R.id.textview_instance_name, R.id.textview_hostname, R.id.textview_portnumber });
     }
@@ -269,7 +277,7 @@ public class ViewInstanceFragment extends Fragment implements ICommandCallBack{
     	
     }
     
-    public void loadAddUpdateInstanceFragment(HashMap<String, String> instanceData){
+    public void loadAddUpdateInstanceFragment(Syslogng syslogng){
     	
     	String key = null;
     	String instanceName = null;
@@ -279,13 +287,13 @@ public class ViewInstanceFragment extends Fragment implements ICommandCallBack{
     	String certificatePassword = null;
     	
     	
-    		key = instanceData.get("Key");
-    		instanceName = instanceData.get("InstanceName");
-    		hostName = instanceData.get("HostName");
-    		portNumber = instanceData.get("PortNumber");
-    		certificateFileName = instanceData.get("CertPath");
-    		certificatePassword = instanceData.get("CertPass");
-    		Log.i("instanceData", instanceData.toString());
+    		key = syslogng.getKey();
+    		instanceName = syslogng.getSyslogngName();
+    		hostName = syslogng.getHostName();
+    		portNumber = syslogng.getPortNumber();
+    		certificateFileName = syslogng.getCertificateFileName();
+    		certificatePassword = syslogng.getCertificatePassword();
+    		Log.i("instanceData", syslogng.toString());
     	
     	itemsSelected.clear();
     	Bundle args = new Bundle();
@@ -305,13 +313,13 @@ public class ViewInstanceFragment extends Fragment implements ICommandCallBack{
 	
     
     
-    public void executeCommandTask(HashMap<String,String> instanceDataClicked, String command){
-    	if(instanceDataClicked.get("CertPath") != null && !instanceDataClicked.get("CertPath").equals("")){
-    		CommandTask commandTask = new CommandTask(this, getActivity(), instanceDataClicked.get("HostName"), Integer.parseInt(instanceDataClicked.get("PortNumber")), command, instanceDataClicked.get("CertPath"), instanceDataClicked.get("CertPass"));
+    public void executeCommandTask(Syslogng instanceDataClicked, String command){
+    	if(instanceDataClicked.getCertificateFileName() != null && !instanceDataClicked.getCertificateFileName().equals("")){
+    		CommandTask commandTask = new CommandTask(this, getActivity(), instanceDataClicked, command);
 			commandTask.execute();
     	}
     	else{
-    		CommandTask commandTask = new CommandTask(this, getActivity(), instanceDataClicked.get("HostName"), Integer.parseInt(instanceDataClicked.get("PortNumber")), command, null, null);
+    		CommandTask commandTask = new CommandTask(this, getActivity(), instanceDataClicked, command);
 			commandTask.execute();
     	}
     }

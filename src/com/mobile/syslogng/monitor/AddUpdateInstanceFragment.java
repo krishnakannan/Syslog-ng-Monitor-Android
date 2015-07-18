@@ -43,7 +43,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 public class AddUpdateInstanceFragment extends Fragment {
     public static final String ACTIONBAR_TITLE = "menu_title";
-    public Boolean insertStatus = false;
+    public Boolean changeStatus = false;
     
     private Context context;
 	private Spinner spinnerClientCertificate;
@@ -153,10 +153,10 @@ public class AddUpdateInstanceFragment extends Fragment {
 		        		certificatePassword = etCertificatePasswordText.getText().toString();
 		        		tempPortNumber = Integer.parseInt(portNumber); // remove tempPortNumber
 		        		if(key != null){
-		        			insertUpdateInstance(true);
+		        			updateSyslogng();
 		        		}
 		        		else{
-		        			insertUpdateInstance(false);
+		        			insertSyslogng();
 		        		}
 		        		editTextInstanceName.setText("");
 		            	editTextHostName.setText("");
@@ -214,19 +214,60 @@ public class AddUpdateInstanceFragment extends Fragment {
 
     }
     
-    public void insertUpdateInstance(Boolean isEdit){
+    public void insertSyslogng(){
     	
+    	Syslogng syslogng = new Syslogng();
+    	
+    	syslogng.setSyslogngName(instanceName);
+    	syslogng.setHostName(hostName);
+    	syslogng.setPortNumber(portNumber);
+    	syslogng.setCertificateFileName(certificateFileName);
+    	syslogng.setCertificatePassword(certificatePassword);
+    		
     	SQLiteManager sManager = new SQLiteManager(getActivity().getApplicationContext());
     	if(isClientCertificateUsed){
-            insertStatus = sManager.insertUpdateInstance(instanceName, hostName, portNumber, certificateFileName, certificatePassword, key, isEdit);
+            changeStatus = sManager.insertSyslogng(syslogng);
     	}
     	else{
     		certificateFileName = "";
-    		insertStatus = sManager.insertUpdateInstance(instanceName, hostName, portNumber, certificateFileName, certificatePassword, key, isEdit);
+    		changeStatus = sManager.insertSyslogng(syslogng);
     	}
     	
         
-        if(insertStatus){
+        if(changeStatus){
+        	
+        	
+        	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.insert_instance_success) , Toast.LENGTH_LONG).show();
+        	
+        }
+        else{
+        	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.insert_instance_failure) , Toast.LENGTH_LONG).show();
+        }
+    }
+    
+public void updateSyslogng(){
+    	
+    	Syslogng syslogng = new Syslogng();
+    	
+    	syslogng.setSyslogngName(instanceName);
+    	syslogng.setHostName(hostName);
+    	syslogng.setPortNumber(portNumber);
+    	syslogng.setCertificateFileName(certificateFileName);
+    	syslogng.setCertificatePassword(certificatePassword);
+    	if(key != null){
+    		syslogng.setKey(Integer.toString(key));
+    	}
+    	SQLiteManager sManager = new SQLiteManager(getActivity().getApplicationContext());
+    	if(isClientCertificateUsed){
+            changeStatus = sManager.updateSyslogng(syslogng); 
+    	}
+    	else{
+    		certificateFileName = "";
+    		changeStatus = sManager.updateSyslogng(syslogng);
+    	}
+    	
+        
+        if(changeStatus){
         	
         	
         	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.insert_instance_success) , Toast.LENGTH_LONG).show();
