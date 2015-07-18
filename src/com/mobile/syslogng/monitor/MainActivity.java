@@ -179,30 +179,30 @@ public class MainActivity extends Activity {
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 				break;
 				
+//			case 2:
+//				fragment = new RunCommandFragment(getApplicationContext());
+//				args.putInt(AddUpdateInstanceFragment.ACTIONBAR_TITLE, position);
+//				fragment.setArguments(args);
+//				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+//				break;
+				
 			case 2:
-				fragment = new RunCommandFragment(getApplicationContext());
-				args.putInt(AddUpdateInstanceFragment.ACTIONBAR_TITLE, position);
+				fragment = new ImportCertificateFragment(getApplicationContext());
+				args.putInt(ViewSyslogngFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 				break;
 				
 			case 3:
-				fragment = new ImportCertificateFragment(getApplicationContext());
-				args.putInt(ViewInstanceFragment.ACTIONBAR_TITLE, position);
+				fragment = new AddUpdateSyslogngFragment(getApplicationContext(), null);
+				args.putInt(AddUpdateSyslogngFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 				break;
 				
 			case 4:
-				fragment = new AddUpdateInstanceFragment(getApplicationContext(), null);
-				args.putInt(AddUpdateInstanceFragment.ACTIONBAR_TITLE, position);
-				fragment.setArguments(args);
-				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
-				break;
-				
-			case 5:
-				fragment = new ViewInstanceFragment(getApplicationContext());
-				args.putInt(ViewInstanceFragment.ACTIONBAR_TITLE, position);
+				fragment = new ViewSyslogngFragment(getApplicationContext());
+				args.putInt(ViewSyslogngFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 				break;

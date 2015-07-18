@@ -61,7 +61,7 @@ import android.widget.Toast;
 import android.widget.AbsListView.MultiChoiceModeListener;
 
 
-public class ViewInstanceFragment extends Fragment implements ICommandCallBack{
+public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
 
 	public static final String ACTIONBAR_TITLE = "menu_title";
 	
@@ -75,11 +75,11 @@ public class ViewInstanceFragment extends Fragment implements ICommandCallBack{
 	
 	Integer sdk = android.os.Build.VERSION.SDK_INT;
 	
-	public ViewInstanceFragment(Context context){
+	public ViewSyslogngFragment(Context context){
 		this.context = context;
 	}
 	
-    public ViewInstanceFragment() {
+    public ViewSyslogngFragment() {
         // Empty constructor required for fragment subclasses
     }
 
@@ -270,8 +270,8 @@ public class ViewInstanceFragment extends Fragment implements ICommandCallBack{
     
     public void reloadCurrentFragment(){
     	Bundle args = new Bundle();
-    	Fragment viewInstanceFragment = new ViewInstanceFragment(context);
-    	args.putInt(ViewInstanceFragment.ACTIONBAR_TITLE, 4);
+    	Fragment viewInstanceFragment = new ViewSyslogngFragment(context);
+    	args.putInt(ViewSyslogngFragment.ACTIONBAR_TITLE, 3);
     	viewInstanceFragment.setArguments(args);
     	getActivity().getFragmentManager().beginTransaction().replace(R.id.container, viewInstanceFragment).commit();
     	
@@ -283,11 +283,11 @@ public class ViewInstanceFragment extends Fragment implements ICommandCallBack{
     	
     	itemsSelected.clear();
     	Bundle args = new Bundle();
-    	Fragment fragment = new AddUpdateInstanceFragment(context, syslogng);
-		args.putInt(AddUpdateInstanceFragment.ACTIONBAR_TITLE, 3);
+    	Fragment fragment = new AddUpdateSyslogngFragment(context, syslogng);
+		args.putInt(AddUpdateSyslogngFragment.ACTIONBAR_TITLE, 2);
 		fragment.setArguments(args);
 		getActivity().getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-		MainActivity.updateDrawer(3);
+		MainActivity.updateDrawer(2);
     }
     
     @Override

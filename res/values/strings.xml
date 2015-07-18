@@ -30,10 +30,10 @@
     <string name="result">Results</string>
 
     <string-array name="menu_array">
-        <item>Home</item>
+        <item>Welcome</item>
         <item>Import Certificate</item>
-        <item>Add/Update Instance</item>
-        <item>Saved Instances</item>
+        <item>Add/Update Syslogng to monitor</item>
+        <item>Monitered Syslogng(s)</item>
         <item>About</item>
     </string-array>
     <string-array name="command_array">

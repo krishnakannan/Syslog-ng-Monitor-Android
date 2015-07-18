@@ -40,7 +40,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class AddUpdateInstanceFragment extends Fragment {
+public class AddUpdateSyslogngFragment extends Fragment {
     public static final String ACTIONBAR_TITLE = "menu_title";
     public Boolean changeStatus = false;
     
@@ -61,11 +61,11 @@ public class AddUpdateInstanceFragment extends Fragment {
     private ArrayAdapter<String> certAdapter;
     private Integer key;
     
-    public AddUpdateInstanceFragment() {
+    public AddUpdateSyslogngFragment() {
         // Empty constructor required for fragment subclasses
     }
     
-    public AddUpdateInstanceFragment(Context context, Syslogng syslogng){
+    public AddUpdateSyslogngFragment(Context context, Syslogng syslogng){
     	this.context = context;
     	this.instanceName = syslogng.getSyslogngName();
     	this.hostName = syslogng.getHostName();

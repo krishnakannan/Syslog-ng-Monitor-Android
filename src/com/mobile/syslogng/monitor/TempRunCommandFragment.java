@@ -41,7 +41,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class RunCommandFragment extends Fragment implements ICommandCallBack{
+public class TempRunCommandFragment extends Fragment implements ICommandCallBack{
 	
 	public static final String ACTIONBAR_TITLE = "menu_title";
 	
@@ -65,11 +65,11 @@ public class RunCommandFragment extends Fragment implements ICommandCallBack{
 	private Integer portNumber;
 	private Boolean isClientCertificateUsed = false;
 	private List<String> fileList = new ArrayList<String>();
-	public RunCommandFragment(){
+	public TempRunCommandFragment(){
 		
 	}
 	
-	public RunCommandFragment(Context context){
+	public TempRunCommandFragment(Context context){
 		this.context = context;
 	}
 	
