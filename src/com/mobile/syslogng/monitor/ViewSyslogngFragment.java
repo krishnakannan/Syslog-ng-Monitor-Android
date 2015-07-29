@@ -23,6 +23,7 @@ package com.mobile.syslogng.monitor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Context;
@@ -66,14 +68,14 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
 	public static final String ACTIONBAR_TITLE = "menu_title";
 	
 	private String command;
-	private Map<Integer,String> itemsDisplayed = new LinkedHashMap<Integer, String>();
-	private ArrayList<String> itemsSelected = new ArrayList<String>();
+	private Map<Integer,Integer> itemsDisplayed = new LinkedHashMap<Integer, Integer>();
+	private HashSet<Integer> itemsSelected = new HashSet<Integer>();
 	private Context context;
 	
-	ListView listViewInstances;
-	ImageView bImg;
+	ListView listViewSyslogngs;
 	
-	Integer sdk = android.os.Build.VERSION.SDK_INT;
+	
+	
 	
 	public ViewSyslogngFragment(Context context){
 		this.context = context;
@@ -83,7 +85,9 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
         // Empty constructor required for fragment subclasses
     }
 
-    ArrayList<Syslogng> list = new ArrayList<Syslogng>();
+    ArrayList<Syslogng> syslogngs = new ArrayList<Syslogng>();
+    
+    SQLiteManager sManager;
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,8 +95,8 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
     	
     	
     	
-    	SQLiteManager instanceDataObject = new SQLiteManager(context);
-        list = instanceDataObject.getInstancesData();
+    	sManager = new SQLiteManager(context);
+        syslogngs = sManager.getSyslogngs();
     	
         
         /*
@@ -102,14 +106,14 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
     	 *  
     	 */
         Integer iterator = 0;
-        for(Syslogng temp : list){
-        	itemsDisplayed.put(iterator++, temp.getKey());
+        for(Syslogng syslogng : syslogngs){
+        	itemsDisplayed.put(iterator++, syslogng.getKey());
         }
         
     	View rootView = inflater.inflate(R.layout.fragment_view_instance, container, false);
         
-    	listViewInstances	 = (ListView) rootView.findViewById(R.id.listview_view_instance);
-    	listViewInstances.setAdapter(getListViewAdapter(list));
+    	listViewSyslogngs	 = (ListView) rootView.findViewById(R.id.listview_view_instance);
+    	listViewSyslogngs.setAdapter(getListViewAdapter(syslogngs));
     	
     	
     	
@@ -122,8 +126,8 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
         
         
         
-        this.listViewInstances.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        this.listViewInstances.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+        this.listViewSyslogngs.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        this.listViewSyslogngs.setMultiChoiceModeListener(new MultiChoiceModeListener() {
         	
         	@Override
         	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -148,7 +152,7 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
         		
         			case R.id.delete_list_item:
         				if(deleteInstancesData()){
-        					reloadCurrentFragment();
+        					reloadListView();
         					mode.finish();
         					Toast.makeText(context, context.getString(R.string.delete_success), Toast.LENGTH_LONG).show();
         				}
@@ -159,7 +163,7 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
         				break;
         			case R.id.edit_list_item:
         				if(itemsSelected.size() == 1){
-        					loadAddUpdateInstanceFragment(list.get(Integer.parseInt(itemsSelected.get(0))));
+        					loadAddUpdateInstanceFragment(syslogngs.get(itemsSelected.iterator().next()));
         					mode.finish();
         				}
         				else{
@@ -176,7 +180,7 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
         	@Override
         	public void onDestroyActionMode(ActionMode mode) {
         		// TODO Auto-generated method stub
-        		listViewInstances.setActivated(false);
+        		listViewSyslogngs.setActivated(false);
         	}
 
 
@@ -185,22 +189,21 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
         	public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
         		if(checked == true){
         			
-        			itemsSelected.add(Integer.toString(position));
-        			listViewInstances.getChildAt(position).setActivated(true);
-        			
+        			itemsSelected.add(position);
+        			listViewSyslogngs.getChildAt(position).setActivated(true);
+
         		}
         		else if(checked == false){
-        			//Integer removalPosition = itemsSelected.indexOf();
-        			itemsSelected.remove(Integer.toString(position));
-        			listViewInstances.getChildAt(position).setActivated(false);
-
+        			itemsSelected.remove(position);
+        			listViewSyslogngs.getChildAt(position).setActivated(false);
+        			
         		}
         		
         	}
         	
         });
         
-        this.listViewInstances.setOnItemClickListener(new OnItemClickListener(){
+        this.listViewSyslogngs.setOnItemClickListener(new OnItemClickListener(){
 
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -210,7 +213,7 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
 			
 			
 			AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-			dialog.setTitle("Select Command");
+			dialog.setTitle(R.string.select_command);
 		    
 			dialog.setSingleChoiceItems(R.array.command_array, -1, new DialogInterface.OnClickListener() {
 				
@@ -222,7 +225,7 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
 			
 			dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int which) { 
-		        	executeCommandTask(list.get(position), command);
+		        	executeCommandTask(syslogngs.get(position), command);
 		        }
 		     });
 		    dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -243,16 +246,15 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
         return rootView;
     }
     
-    public Boolean deleteInstancesData(){
-    	ArrayList<String> itemsToDelete = new ArrayList<String>();
-    	SQLiteManager sManager = new SQLiteManager(context);
-    	for(String item : itemsSelected){
-    		itemsToDelete.add(itemsDisplayed.get(Integer.parseInt(item))); 
+    private Boolean deleteInstancesData(){
+    	ArrayList<Integer> itemsToDelete = new ArrayList<Integer>();
+    	for(Integer item : itemsSelected){
+    		itemsToDelete.add(itemsDisplayed.get(item)); 
     	}
-    	return sManager.deleteInstancesData(itemsToDelete);
+    	return sManager.deleteSyslogngs(itemsToDelete);
     }
     
-    public SimpleAdapter getListViewAdapter(ArrayList<Syslogng> list){
+    private SimpleAdapter getListViewAdapter(ArrayList<Syslogng> list){
     	ArrayList<HashMap<String,String>> dataList = new ArrayList<HashMap<String, String>>();
     	for(Syslogng items : list){
     		 HashMap<String,String> dataListItem = new HashMap<String,String>();
@@ -268,25 +270,25 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
     
     
     
-    public void reloadCurrentFragment(){
-    	Bundle args = new Bundle();
-    	Fragment viewInstanceFragment = new ViewSyslogngFragment(context);
-    	args.putInt(ViewSyslogngFragment.ACTIONBAR_TITLE, 3);
-    	viewInstanceFragment.setArguments(args);
-    	getActivity().getFragmentManager().beginTransaction().replace(R.id.container, viewInstanceFragment).commit();
+    private void reloadListView(){
     	
+    	listViewSyslogngs.setAdapter(getListViewAdapter(sManager.getSyslogngs()));
+    	listViewSyslogngs.invalidate();
     }
     
-    public void loadAddUpdateInstanceFragment(Syslogng syslogng){
+    private void loadAddUpdateInstanceFragment(Syslogng syslogng){
     	
-    		Log.i("instanceData", syslogng.toString());
+    		Log.i("instanceData", syslogng.getHostName()+" "+ syslogng.getPortNumber() +" "+ syslogng.getKey());
     	
     	itemsSelected.clear();
     	Bundle args = new Bundle();
-    	Fragment fragment = new AddUpdateSyslogngFragment(context, syslogng);
-		args.putInt(AddUpdateSyslogngFragment.ACTIONBAR_TITLE, 2);
+    	Fragment fragment = new SyslogngFragment(context, syslogng);
+		args.putInt(SyslogngFragment.ACTIONBAR_TITLE, 2);
 		fragment.setArguments(args);
-		getActivity().getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+		FragmentManager fragmentManager = getActivity().getFragmentManager();
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		transaction.replace(R.id.container, fragment);
+		transaction.commit();
 		MainActivity.updateDrawer(2);
     }
     
@@ -299,13 +301,13 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
 	
     
     
-    public void executeCommandTask(Syslogng instanceDataClicked, String command){
-    	if(instanceDataClicked.getCertificateFileName() != null && !instanceDataClicked.getCertificateFileName().equals("")){
-    		CommandTask commandTask = new CommandTask(this, getActivity(), instanceDataClicked, command);
+    private void executeCommandTask(Syslogng syslogng, String command){
+    	if(syslogng.getCertificateFileName() != null && !syslogng.getCertificateFileName().equals("")){
+    		CommandTask commandTask = new CommandTask(this, getActivity(), syslogng, command);
 			commandTask.execute();
     	}
     	else{
-    		CommandTask commandTask = new CommandTask(this, getActivity(), instanceDataClicked, command);
+    		CommandTask commandTask = new CommandTask(this, getActivity(), syslogng, command);
 			commandTask.execute();
     	}
     }
@@ -321,11 +323,11 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
 		showResult(result, isException);	
 	}
 
-	public void showResult(String message, Boolean isException){
+	private void showResult(String message, Boolean isException){
 		
 		if(isException){
 			new AlertDialog.Builder(getActivity())
-		    .setTitle("Error")
+		    .setTitle(R.string.error)
 		    .setMessage(message)
 		    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int which) { 
@@ -336,7 +338,7 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
 		}
 		else{
 			new AlertDialog.Builder(getActivity())
-		    .setTitle("Result")
+		    .setTitle(R.string.result)
 		    .setMessage(message)
 		    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int which) { 

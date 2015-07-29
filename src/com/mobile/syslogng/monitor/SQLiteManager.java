@@ -56,7 +56,7 @@ static final String DATABASENAME = "instances.db";
 
 	public Boolean insertSyslogng(Syslogng syslogng)
 	{
-		Boolean status;
+		Boolean status = true;
 		SQLiteDatabase db = getWritableDatabase();
 			SQLiteStatement insertStatement = db.compileStatement(INSERT);
 			insertStatement.bindString(1, syslogng.getSyslogngName());
@@ -72,7 +72,6 @@ static final String DATABASENAME = "instances.db";
 			
 			try{
 				insertStatement.executeInsert();
-				status = true;
 			}
 			catch(SQLException e){
 				status = false;
@@ -86,7 +85,7 @@ static final String DATABASENAME = "instances.db";
 	}
 	
 	public Boolean updateSyslogng(Syslogng syslogng){
-		Boolean status;
+		Boolean status = true;
 		SQLiteDatabase db = getWritableDatabase();
 		
 		SQLiteStatement updateStatement = db.compileStatement(UPDATE);
@@ -99,10 +98,9 @@ static final String DATABASENAME = "instances.db";
 		if(syslogng.getCertificatePassword() != null){
 			updateStatement.bindString(5, syslogng.getCertificatePassword());
 		}
-		updateStatement.bindString(6, syslogng.getKey());
+		updateStatement.bindString(6, Integer.toString(syslogng.getKey()));
 		try{
 			updateStatement.executeUpdateDelete();
-			status = true;
 		}
 		catch(SQLException e){
 			status = false;
@@ -116,7 +114,7 @@ static final String DATABASENAME = "instances.db";
 		return status;
 	}
 	
-	public ArrayList<Syslogng> getInstancesData()
+	public ArrayList<Syslogng> getSyslogngs()
 	{
 		SQLiteDatabase db = getReadableDatabase();
 		ArrayList<Syslogng> list = new ArrayList<Syslogng>();
@@ -125,7 +123,7 @@ static final String DATABASENAME = "instances.db";
 		
 		while (cursor.moveToNext()) {
 			Syslogng syslogng = new Syslogng();
-			syslogng.setKey(Integer.toString(cursor.getInt(0)));
+			syslogng.setKey(cursor.getInt(0));
 			syslogng.setSyslogngName(cursor.getString(1));
 			syslogng.setHostName(cursor.getString(2));
 			syslogng.setPortNumber(cursor.getString(3));
@@ -140,15 +138,15 @@ static final String DATABASENAME = "instances.db";
 		return list;
 	}
 
-	public Boolean deleteInstancesData(ArrayList<String> itemsToDelete){
+	public Boolean deleteSyslogngs(ArrayList<Integer> itemsToDelete){
 		
 		Boolean status = false;
 		SQLiteDatabase db = getWritableDatabase();
 		SQLiteStatement deleteStatement = db.compileStatement(DELETE);
 		try{
 			
-		for(String itemKey : itemsToDelete){
-			deleteStatement.bindString(1, itemKey);
+		for(Integer itemKey : itemsToDelete){
+			deleteStatement.bindString(1, Integer.toString(itemKey));
 			deleteStatement.executeUpdateDelete();
 			}
 			status = true;

@@ -12,7 +12,7 @@ public class Syslogng {
 	
 	private String certificatePassword;
 	
-	private String key;
+	private Integer key;
 
 	public String getSyslogngName() {
 		return syslogngName;
@@ -54,11 +54,11 @@ public class Syslogng {
 		this.certificatePassword = certificatePassword;
 	}
 
-	public String getKey() {
+	public Integer getKey() {
 		return key;
 	}
 
-	public void setKey(String key) {
+	public void setKey(Integer key) {
 		this.key = key;
 	}
 

@@ -123,7 +123,7 @@ public class MainActivity extends Activity {
 
 		if (savedInstanceState == null) {
 			SQLiteManager sManager = new SQLiteManager(getApplicationContext());
-			ArrayList<Syslogng> savedData = sManager.getInstancesData();
+			ArrayList<Syslogng> savedData = sManager.getSyslogngs();
 			if(savedData.isEmpty()){
 				selectItem(0);
 			}
@@ -204,8 +204,8 @@ public class MainActivity extends Activity {
 				break;
 				
 			case 3:
-				fragment = new AddUpdateSyslogngFragment(getApplicationContext(), null);
-				args.putInt(AddUpdateSyslogngFragment.ACTIONBAR_TITLE, position);
+				fragment = new SyslogngFragment(getApplicationContext(), null);
+				args.putInt(SyslogngFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 				break;

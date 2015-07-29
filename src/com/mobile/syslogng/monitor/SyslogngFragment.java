@@ -27,6 +27,7 @@ import java.util.List;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class AddUpdateSyslogngFragment extends Fragment {
+public class SyslogngFragment extends Fragment {
     public static final String ACTIONBAR_TITLE = "menu_title";
     public Boolean changeStatus = false;
     
@@ -61,11 +62,11 @@ public class AddUpdateSyslogngFragment extends Fragment {
     private ArrayAdapter<String> certAdapter;
     private Integer key;
     
-    public AddUpdateSyslogngFragment() {
+    public SyslogngFragment() {
         // Empty constructor required for fragment subclasses
     }
     
-    public AddUpdateSyslogngFragment(Context context, Syslogng syslogng){
+    public SyslogngFragment(Context context, Syslogng syslogng){
     	this.context = context;
     	if(syslogng != null){
     		this.instanceName = syslogng.getSyslogngName();
@@ -73,9 +74,10 @@ public class AddUpdateSyslogngFragment extends Fragment {
         	this.portNumber = syslogng.getPortNumber();
         	this.certificateFileName = syslogng.getCertificateFileName();
         	this.certificatePassword = syslogng.getCertificatePassword();
-        	if(key != null){
-        		this.key = Integer.parseInt(syslogng.getKey());
-        	}
+        	this.key = syslogng.getKey();
+        	
+        	
+        	Log.i("Editing value", hostName +" "+ portNumber +" "+ key);
     	}
     }
 
@@ -144,7 +146,7 @@ public class AddUpdateSyslogngFragment extends Fragment {
 				
 				Bundle args = new Bundle();
 		    	Fragment fragment = new ImportCertificateFragment(context);
-				args.putInt(AddUpdateSyslogngFragment.ACTIONBAR_TITLE, 1);
+				args.putInt(SyslogngFragment.ACTIONBAR_TITLE, 1);
 				fragment.setArguments(args);
 				getActivity().getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
 				MainActivity.updateDrawer(1);
@@ -271,7 +273,7 @@ public void updateSyslogng(){
     	syslogng.setCertificateFileName(certificateFileName);
     	syslogng.setCertificatePassword(certificatePassword);
     	if(key != null){
-    		syslogng.setKey(Integer.toString(key));
+    		syslogng.setKey(key);
     	}
     	SQLiteManager sManager = new SQLiteManager(getActivity().getApplicationContext());
     	if(isClientCertificateUsed){

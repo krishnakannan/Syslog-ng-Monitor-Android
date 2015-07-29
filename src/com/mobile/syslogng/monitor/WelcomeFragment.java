@@ -53,8 +53,8 @@ public class WelcomeFragment extends Fragment {
 			public void onClick(View v) {
 				
 				Bundle args = new Bundle();
-		    	Fragment fragment = new AddUpdateSyslogngFragment(context, null);
-				args.putInt(AddUpdateSyslogngFragment.ACTIONBAR_TITLE, 2);
+		    	Fragment fragment = new SyslogngFragment(context, null);
+				args.putInt(SyslogngFragment.ACTIONBAR_TITLE, 2);
 				fragment.setArguments(args);
 				getActivity().getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
 				MainActivity.updateDrawer(2);
