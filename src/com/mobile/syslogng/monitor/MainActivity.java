@@ -22,33 +22,20 @@ package com.mobile.syslogng.monitor;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import static com.mobile.syslogng.monitor.SQLiteManager.CREATETABLE;
 
 public class MainActivity extends Activity {
 
@@ -198,7 +185,7 @@ public class MainActivity extends Activity {
 				
 			case 2:
 				fragment = new ImportCertificateFragment(getApplicationContext());
-				args.putInt(ViewSyslogngFragment.ACTIONBAR_TITLE, position);
+				args.putInt(MonitoredSyslogngFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 				break;
@@ -211,8 +198,8 @@ public class MainActivity extends Activity {
 				break;
 				
 			case 4:
-				fragment = new ViewSyslogngFragment(getApplicationContext());
-				args.putInt(ViewSyslogngFragment.ACTIONBAR_TITLE, position);
+				fragment = new MonitoredSyslogngFragment(getApplicationContext());
+				args.putInt(MonitoredSyslogngFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
 				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 				break;

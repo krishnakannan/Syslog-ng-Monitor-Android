@@ -6,24 +6,24 @@
     
     
     <EditText
-        android:id="@+id/ai_et_instance_name"
+        android:id="@+id/ai_et_syslogng_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/ai_et_instance_input"
+        android:layout_above="@+id/ai_et_syslogng_input"
         android:layout_marginBottom="25dp"
         android:layout_alignStart="@+id/ai_et_port_input"
         android:layout_alignEnd="@+id/ai_et_port_input"
         android:layout_alignRight="@+id/ai_et_port_input"
         android:layout_alignLeft="@+id/ai_et_port_input"
         android:ems="10"
-        android:hint="@string/instance_name_hint"
+        android:hint="@string/syslogng_name_hint"
         android:imeOptions="actionNext"
         android:singleLine="true">
           <requestFocus />
      </EditText>
     
     <EditText
-        android:id="@+id/ai_et_instance_input"
+        android:id="@+id/ai_et_syslogng_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/ai_et_port_input"
@@ -102,12 +102,12 @@
     android:layout_alignParentBottom="true">
 
      <Button
-         android:id="@+id/ai_btn_save_instance"
+         android:id="@+id/ai_btn_save_syslogng"
          
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_weight="0.85"
-         android:text="@string/add_instance"
+         android:text="@string/add_syslogng"
          android:textSize="15sp" />
 
      <Button

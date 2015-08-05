@@ -27,7 +27,6 @@ import java.util.List;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,13 +53,10 @@ public class SyslogngFragment extends Fragment {
 	private EditText etCertificatePasswordText;
 	private EditText editTextInstanceName;
 	private Boolean isClientCertificateUsed = false;
-	private String certificateFileName;
-	private String instanceName;
-	private String hostName;
-	private String portNumber;
-	private String certificatePassword = "";
+	private Syslogng syslogng;
+	
     private ArrayAdapter<String> certAdapter;
-    private Integer key;
+    
     
     public SyslogngFragment() {
         // Empty constructor required for fragment subclasses
@@ -69,31 +65,21 @@ public class SyslogngFragment extends Fragment {
     public SyslogngFragment(Context context, Syslogng syslogng){
     	this.context = context;
     	if(syslogng != null){
-    		this.instanceName = syslogng.getSyslogngName();
-        	this.hostName = syslogng.getHostName();
-        	this.portNumber = syslogng.getPortNumber();
-        	this.certificateFileName = syslogng.getCertificateFileName();
-        	this.certificatePassword = syslogng.getCertificatePassword();
-        	this.key = syslogng.getKey();
+    		this.syslogng = syslogng;
         	
-        	
-        	Log.i("Editing value", hostName +" "+ portNumber +" "+ key);
     	}
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_add_instance, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_add_syslogng, container, false);
         int i = getArguments().getInt(ACTIONBAR_TITLE);
         String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i];
         FileManager fManager = new FileManager(context);
         File certificateDir = new File(fManager.getCertificateDirectory());
         
-        File[] certificates = certificateDir.listFiles();
-        for(File file : certificates){
-        	fileList.add(file.getName());
-        }
+        getCertificateNames(certificateDir);
         
         spinnerClientCertificate = (Spinner) rootView.findViewById(R.id.ai_spinner_certificate);
         certAdapter = new ArrayAdapter<String>(getActivity(),
@@ -107,91 +93,32 @@ public class SyslogngFragment extends Fragment {
         etCertificatePasswordText.setVisibility(View.INVISIBLE);
         
         
-        
-        
-        
-        
-        getActivity().setTitle(actionbarTitle);
-        return rootView;
-    }
-    
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         cbIncludeCertificate = (CheckBox) getActivity().findViewById(R.id.ai_cb_include_certificate);
         
-		if(fileList.isEmpty()){
-			cbIncludeCertificate.setEnabled(false);
-		}
-		else{
-			cbIncludeCertificate.setEnabled(true);
-		}
-        
+		
+		cbIncludeCertificate.setEnabled(!fileList.isEmpty());
 		
 		
-        editTextInstanceName = (EditText) getActivity().findViewById(R.id.ai_et_instance_name);
-        editTextHostName = (EditText) getActivity().findViewById(R.id.ai_et_instance_input);
+		
+        editTextInstanceName = (EditText) getActivity().findViewById(R.id.ai_et_syslogng_name);
+        editTextHostName = (EditText) getActivity().findViewById(R.id.ai_et_syslogng_input);
         editTextPortNumber = (EditText) getActivity().findViewById(R.id.ai_et_port_input);
         
+        populateAllValues();
         
-        if(key != null){
-        	populateAllValues();
-        }
         
         Button btnImportCertificate = (Button) getActivity().findViewById(R.id.ai_btn_import_certificate);
         btnImportCertificate.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
-				
-				Bundle args = new Bundle();
-		    	Fragment fragment = new ImportCertificateFragment(context);
-				args.putInt(SyslogngFragment.ACTIONBAR_TITLE, 1);
-				fragment.setArguments(args);
-				getActivity().getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-				MainActivity.updateDrawer(1);
-				
+				btnImportCertificateOnClick();
 			}
 		});
         
-        Button btnAddInstance = (Button) getActivity().findViewById(R.id.ai_btn_save_instance);
-        btnAddInstance.setOnClickListener(new View.OnClickListener() {
+        Button btnAddSyslogng = (Button) getActivity().findViewById(R.id.ai_btn_save_syslogng);
+        btnAddSyslogng.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				
-				
-		        Integer tempPortNumber;
-		        
-		        instanceName = editTextInstanceName.getText().toString();
-		        hostName = editTextHostName.getText().toString();
-		        portNumber = editTextPortNumber.getText().toString();
-		        
-		        if(checkInstanceNameValidity(instanceName) && checkHostValidity(hostName) && checkPortValidity(portNumber)){
-		        	
-		        	try{
-		        		certificatePassword = etCertificatePasswordText.getText().toString();
-		        		tempPortNumber = Integer.parseInt(portNumber); // remove tempPortNumber
-		        		if(key != null){
-		        			updateSyslogng();
-		        		}
-		        		else{
-		        			insertSyslogng();
-		        		}
-		        		editTextInstanceName.setText("");
-		            	editTextHostName.setText("");
-		            	editTextPortNumber.setText("");
-		            	etCertificatePasswordText.setText("");
-		        	}
-		        	catch(NumberFormatException e){
-		        		Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.port_error), Toast.LENGTH_LONG).show();
-		        	}
-		        	
-		        }
-		        else{
-		        	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.host_port_error), Toast.LENGTH_LONG).show();
-		        }
-		        
-		        
-		        	
+				btnAddSyslogngOnClick();
 			}
         });
         
@@ -219,7 +146,7 @@ public class SyslogngFragment extends Fragment {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				
-				certificateFileName = parent.getItemAtPosition(position).toString();
+				syslogng.setCertificateFileName(parent.getItemAtPosition(position).toString());
 			}
 
 			@Override
@@ -229,25 +156,33 @@ public class SyslogngFragment extends Fragment {
 			}
 			
 		});
+        
+        
+        
+        
+        getActivity().setTitle(actionbarTitle);
+        return rootView;
+    }
+    
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        
 
     }
     
-    public void insertSyslogng(){
+    private void insertSyslogng(){
     	
-    	Syslogng syslogng = new Syslogng();
+    	Syslogng syslogng = this.syslogng;
     	
-    	syslogng.setSyslogngName(instanceName);
-    	syslogng.setHostName(hostName);
-    	syslogng.setPortNumber(portNumber);
-    	syslogng.setCertificateFileName(certificateFileName);
-    	syslogng.setCertificatePassword(certificatePassword);
+    	
     		
     	SQLiteManager sManager = new SQLiteManager(getActivity().getApplicationContext());
     	if(isClientCertificateUsed){
             changeStatus = sManager.insertSyslogng(syslogng);
     	}
     	else{
-    		certificateFileName = "";
+    		syslogng.setCertificateFileName("");
     		changeStatus = sManager.insertSyslogng(syslogng);
     	}
     	
@@ -263,24 +198,20 @@ public class SyslogngFragment extends Fragment {
         }
     }
     
-public void updateSyslogng(){
+    private void updateSyslogng(){
     	
-    	Syslogng syslogng = new Syslogng();
+    	Syslogng syslogng = this.syslogng;
     	
-    	syslogng.setSyslogngName(instanceName);
-    	syslogng.setHostName(hostName);
-    	syslogng.setPortNumber(portNumber);
-    	syslogng.setCertificateFileName(certificateFileName);
-    	syslogng.setCertificatePassword(certificatePassword);
-    	if(key != null){
-    		syslogng.setKey(key);
+    	
+    	if(this.syslogng.getKey() != null){
+    		syslogng.setKey(this.syslogng.getKey());
     	}
     	SQLiteManager sManager = new SQLiteManager(getActivity().getApplicationContext());
     	if(isClientCertificateUsed){
             changeStatus = sManager.updateSyslogng(syslogng); 
     	}
     	else{
-    		certificateFileName = "";
+    		syslogng.setCertificateFileName("");
     		changeStatus = sManager.updateSyslogng(syslogng);
     	}
     	
@@ -296,36 +227,88 @@ public void updateSyslogng(){
         }
     }
     
-    public void populateAllValues(){
+    private void populateAllValues(){
     	    	
-    	editTextInstanceName.setText(instanceName);
-    	editTextHostName.setText(hostName);
-    	editTextPortNumber.setText(portNumber);
+    	if(syslogng != null && syslogng.getKey() != null)
+    	editTextInstanceName.setText(syslogng.getSyslogngName());
+    	editTextHostName.setText(syslogng.getHostName());
+    	editTextPortNumber.setText(syslogng.getPortNumber());
     	
     	spinnerClientCertificate.setVisibility(View.VISIBLE);
         etCertificatePasswordText.setVisibility(View.VISIBLE);
     	
-    	if(certificateFileName != null && !certificateFileName.equals("")){
+    	if(syslogng.getCertificateFileName() != null && !syslogng.getCertificateFileName().equals("")){
     		isClientCertificateUsed = true;
     		cbIncludeCertificate.setChecked(true);
     		spinnerClientCertificate.setSelection(certAdapter.getPosition("certificateFileName"));
-    		etCertificatePasswordText.setText(certificatePassword);
+    		etCertificatePasswordText.setText(syslogng.getCertificatePassword());
     	}
     	
     }
     
-    public Boolean checkHostValidity(String instanceString){
+    private Boolean checkHostValidity(String instanceString){
 		
 		return (instanceString != null && !instanceString.equals(""));
 	}
 	
-    public Boolean checkInstanceNameValidity(String instanceName){
+    private Boolean checkInstanceNameValidity(String instanceName){
 		
 		return (instanceName != null && !instanceName.equals(""));
 	}
 	
-	public Boolean checkPortValidity(String portString){
+	private Boolean checkPortValidity(String portString){
 		
 		return (portString != null && !portString.equals(""));
 	}
+	
+	private void getCertificateNames(File certificateDir){
+		File[] certificates = certificateDir.listFiles();
+        for(File file : certificates){
+        	fileList.add(file.getName());
+        }
+	}
+	
+	private void btnImportCertificateOnClick(){
+		Bundle args = new Bundle();
+    	Fragment fragment = new ImportCertificateFragment(context);
+		args.putInt(SyslogngFragment.ACTIONBAR_TITLE, 1);
+		fragment.setArguments(args);
+		getActivity().getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+		MainActivity.updateDrawer(1);
+	}
+	
+	private void btnAddSyslogngOnClick(){
+		
+		Integer tempPortNumber;
+        
+        syslogng.setSyslogngName(editTextInstanceName.getText().toString());
+        syslogng.setHostName(editTextHostName.getText().toString());
+        syslogng.setPortNumber(editTextPortNumber.getText().toString());
+        
+        if(checkInstanceNameValidity(syslogng.getSyslogngName()) && checkHostValidity(syslogng.getHostName()) && checkPortValidity(syslogng.getPortNumber())){
+        	
+        	try{
+        		syslogng.setCertificatePassword(etCertificatePasswordText.getText().toString());
+        		tempPortNumber = Integer.parseInt(syslogng.getPortNumber()); // remove tempPortNumber
+        		if(syslogng.getKey() != null){
+        			updateSyslogng();
+        		}
+        		else{
+        			insertSyslogng();
+        		}
+        		editTextInstanceName.setText("");
+            	editTextHostName.setText("");
+            	editTextPortNumber.setText("");
+            	etCertificatePasswordText.setText("");
+        	}
+        	catch(NumberFormatException e){
+        		Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.port_error), Toast.LENGTH_LONG).show();
+        	}
+        	
+        }
+        else{
+        	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.host_port_error), Toast.LENGTH_LONG).show();
+        }
+	}
+	
 }

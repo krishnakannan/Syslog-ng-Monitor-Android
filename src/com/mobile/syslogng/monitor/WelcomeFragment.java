@@ -18,8 +18,6 @@
 
 package com.mobile.syslogng.monitor;
 
-import java.util.Locale;
-
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;

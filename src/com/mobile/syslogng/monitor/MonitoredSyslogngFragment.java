@@ -28,24 +28,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,16 +45,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.MultiChoiceModeListener;
 
 
-public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
+public class MonitoredSyslogngFragment extends Fragment implements ICommandCallBack{
 
 	public static final String ACTIONBAR_TITLE = "menu_title";
 	
@@ -77,11 +65,11 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
 	
 	
 	
-	public ViewSyslogngFragment(Context context){
+	public MonitoredSyslogngFragment(Context context){
 		this.context = context;
 	}
 	
-    public ViewSyslogngFragment() {
+    public MonitoredSyslogngFragment() {
         // Empty constructor required for fragment subclasses
     }
 
@@ -151,7 +139,7 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
         		switch (item.getItemId()) {
         		
         			case R.id.delete_list_item:
-        				if(deleteInstancesData()){
+        				if(deleteSyslogngs()){
         					reloadListView();
         					mode.finish();
         					Toast.makeText(context, context.getString(R.string.delete_success), Toast.LENGTH_LONG).show();
@@ -163,7 +151,7 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
         				break;
         			case R.id.edit_list_item:
         				if(itemsSelected.size() == 1){
-        					loadAddUpdateInstanceFragment(syslogngs.get(itemsSelected.iterator().next()));
+        					loadSyslogngFragment(syslogngs.get(itemsSelected.iterator().next()));
         					mode.finish();
         				}
         				else{
@@ -246,7 +234,7 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
         return rootView;
     }
     
-    private Boolean deleteInstancesData(){
+    private Boolean deleteSyslogngs(){
     	ArrayList<Integer> itemsToDelete = new ArrayList<Integer>();
     	for(Integer item : itemsSelected){
     		itemsToDelete.add(itemsDisplayed.get(item)); 
@@ -276,7 +264,7 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
     	listViewSyslogngs.invalidate();
     }
     
-    private void loadAddUpdateInstanceFragment(Syslogng syslogng){
+    private void loadSyslogngFragment(Syslogng syslogng){
     	
     		Log.i("instanceData", syslogng.getHostName()+" "+ syslogng.getPortNumber() +" "+ syslogng.getKey());
     	
@@ -302,14 +290,10 @@ public class ViewSyslogngFragment extends Fragment implements ICommandCallBack{
     
     
     private void executeCommandTask(Syslogng syslogng, String command){
-    	if(syslogng.getCertificateFileName() != null && !syslogng.getCertificateFileName().equals("")){
+    	
     		CommandTask commandTask = new CommandTask(this, getActivity(), syslogng, command);
 			commandTask.execute();
-    	}
-    	else{
-    		CommandTask commandTask = new CommandTask(this, getActivity(), syslogng, command);
-			commandTask.execute();
-    	}
+    	
     }
     
     @Override
