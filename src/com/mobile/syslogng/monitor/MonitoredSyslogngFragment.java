@@ -98,7 +98,7 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
         	itemsDisplayed.put(iterator++, syslogng.getKey());
         }
         
-    	View rootView = inflater.inflate(R.layout.fragment_view_instance, container, false);
+    	View rootView = inflater.inflate(R.layout.fragment_monitored_syslogng, container, false);
         
     	listViewSyslogngs	 = (ListView) rootView.findViewById(R.id.listview_view_instance);
     	listViewSyslogngs.setAdapter(getListViewAdapter(syslogngs));

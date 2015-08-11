@@ -30,6 +30,7 @@
     <string name="edit">Edit</string>
     <string name="result">Results</string>
     <string name="error">Error</string>
+    <string name="welcome_fragment">Welcome</string>
 
     <string-array name="menu_array">
         <item>Welcome</item>

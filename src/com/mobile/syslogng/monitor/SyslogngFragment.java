@@ -66,7 +66,9 @@ public class SyslogngFragment extends Fragment {
     	this.context = context;
     	if(syslogng != null){
     		this.syslogng = syslogng;
-        	
+    	}
+    	else{
+    		this.syslogng = new Syslogng();
     	}
     }
 
