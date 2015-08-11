@@ -93,21 +93,21 @@ public class SyslogngFragment extends Fragment {
         etCertificatePasswordText.setVisibility(View.INVISIBLE);
         
         
-        cbIncludeCertificate = (CheckBox) getActivity().findViewById(R.id.ai_cb_include_certificate);
+        cbIncludeCertificate = (CheckBox) rootView.findViewById(R.id.ai_cb_include_certificate);
         
 		
 		cbIncludeCertificate.setEnabled(!fileList.isEmpty());
 		
 		
 		
-        editTextInstanceName = (EditText) getActivity().findViewById(R.id.ai_et_syslogng_name);
-        editTextHostName = (EditText) getActivity().findViewById(R.id.ai_et_syslogng_input);
-        editTextPortNumber = (EditText) getActivity().findViewById(R.id.ai_et_port_input);
+        editTextInstanceName = (EditText) rootView.findViewById(R.id.ai_et_syslogng_name);
+        editTextHostName = (EditText) rootView.findViewById(R.id.ai_et_syslogng_input);
+        editTextPortNumber = (EditText) rootView.findViewById(R.id.ai_et_port_input);
         
         populateAllValues();
         
         
-        Button btnImportCertificate = (Button) getActivity().findViewById(R.id.ai_btn_import_certificate);
+        Button btnImportCertificate = (Button) rootView.findViewById(R.id.ai_btn_import_certificate);
         btnImportCertificate.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -115,7 +115,7 @@ public class SyslogngFragment extends Fragment {
 			}
 		});
         
-        Button btnAddSyslogng = (Button) getActivity().findViewById(R.id.ai_btn_save_syslogng);
+        Button btnAddSyslogng = (Button) rootView.findViewById(R.id.ai_btn_save_syslogng);
         btnAddSyslogng.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				btnAddSyslogngOnClick();
@@ -229,21 +229,23 @@ public class SyslogngFragment extends Fragment {
     
     private void populateAllValues(){
     	    	
-    	if(syslogng != null && syslogng.getKey() != null)
-    	editTextInstanceName.setText(syslogng.getSyslogngName());
-    	editTextHostName.setText(syslogng.getHostName());
-    	editTextPortNumber.setText(syslogng.getPortNumber());
+    	if(syslogng != null && syslogng.getKey() != null){
+    		
     	
-    	spinnerClientCertificate.setVisibility(View.VISIBLE);
-        etCertificatePasswordText.setVisibility(View.VISIBLE);
+    		editTextInstanceName.setText(syslogng.getSyslogngName());
+    		editTextHostName.setText(syslogng.getHostName());
+    		editTextPortNumber.setText(syslogng.getPortNumber());
     	
-    	if(syslogng.getCertificateFileName() != null && !syslogng.getCertificateFileName().equals("")){
-    		isClientCertificateUsed = true;
-    		cbIncludeCertificate.setChecked(true);
-    		spinnerClientCertificate.setSelection(certAdapter.getPosition("certificateFileName"));
-    		etCertificatePasswordText.setText(syslogng.getCertificatePassword());
+    		spinnerClientCertificate.setVisibility(View.VISIBLE);
+        	etCertificatePasswordText.setVisibility(View.VISIBLE);
+    	
+    		if(syslogng.getCertificateFileName() != null && !syslogng.getCertificateFileName().equals("")){
+    			isClientCertificateUsed = true;
+    			cbIncludeCertificate.setChecked(true);
+    			spinnerClientCertificate.setSelection(certAdapter.getPosition("certificateFileName"));
+    			etCertificatePasswordText.setText(syslogng.getCertificatePassword());
+    		}
     	}
-    	
     }
     
     private Boolean checkHostValidity(String instanceString){
