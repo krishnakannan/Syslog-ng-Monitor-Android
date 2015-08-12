@@ -37,23 +37,25 @@ import android.widget.Toast;
 public class ImportCertificateFragment extends Fragment {
 
 	Context context;
+	private IMainActivity mainActivityCallBack;
 	
-	public static final String ACTIONBAR_TITLE = "menu_title";
+	
 	private static final int PICKFILE_CODE = 1;
 	
     public ImportCertificateFragment() {
         // Empty constructor required for fragment subclasses
     }
     
-    public ImportCertificateFragment(Context context) {
+    public ImportCertificateFragment(IMainActivity mainActivityCallBack,Context context) {
     	this.context = context;
+    	this.mainActivityCallBack = mainActivityCallBack;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_import_certificate, container, false);
-        int i = getArguments().getInt(ACTIONBAR_TITLE);
+        int i = getArguments().getInt(MainActivity.FRAGMENT_POS);
         String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i];
        
         getActivity().setTitle(actionbarTitle);

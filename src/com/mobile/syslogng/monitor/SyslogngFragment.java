@@ -42,7 +42,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class SyslogngFragment extends Fragment {
-    public static final String ACTIONBAR_TITLE = "menu_title";
+    
     public Boolean changeStatus = false;
     
     private Context context;
@@ -55,6 +55,7 @@ public class SyslogngFragment extends Fragment {
 	private EditText editTextSyslogngName;
 	private Boolean isClientCertificateUsed = false;
 	private Syslogng syslogng;
+	private IMainActivity mainActivityCallBack;
 	
     private ArrayAdapter<String> certAdapter;
     
@@ -63,7 +64,8 @@ public class SyslogngFragment extends Fragment {
         // Empty constructor required for fragment subclasses
     }
     
-    public SyslogngFragment(Context context, Syslogng syslogng){
+    public SyslogngFragment(IMainActivity mainActivityCallBack, Context context, Syslogng syslogng){
+    	this.mainActivityCallBack = mainActivityCallBack;
     	this.context = context;
     	if(syslogng != null){
     		this.syslogng = syslogng;
@@ -77,7 +79,7 @@ public class SyslogngFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_syslogng, container, false);
-        int i = getArguments().getInt(ACTIONBAR_TITLE);
+        int i = getArguments().getInt(MainActivity.FRAGMENT_POS);
         String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i];
         FileManager fManager = new FileManager(context);
         File certificateDir = new File(fManager.getCertificateDirectory());
@@ -286,12 +288,12 @@ public class SyslogngFragment extends Fragment {
 	
 	private void btnImportCertificateOnClick(){
 		Bundle args = new Bundle();
-    	Fragment fragment = new ImportCertificateFragment(context);
-		args.putInt(SyslogngFragment.ACTIONBAR_TITLE, 1);
+    	Fragment fragment = new ImportCertificateFragment(mainActivityCallBack, context);
+		args.putInt(MainActivity.FRAGMENT_POS, 1);
 		fragment.setArguments(args);
 		FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
 		transaction.replace(R.id.container, fragment, "fragment_importcert_tag").commit();
-		MainActivity.updateDrawer(1);
+		mainActivityCallBack.updateDrawer(MainActivity.IMPORT_CERTIFICATE_FRAGMENT_POS);
 	}
 	
 	private void btnAddSyslogngOnClick(){

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	
+    <string name="app_title">Syslog-ng Monitor</string>
     <string name="app_name">Syslog-ng-Monitor-Android</string>
     <string name="add_instance_title">Enter the server details you want to save and connect</string>
     <string name="add_syslogng">Add Instance</string>

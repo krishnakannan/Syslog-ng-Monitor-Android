@@ -29,19 +29,21 @@ import android.widget.Button;
 
 
 public class WelcomeFragment extends Fragment {
-    public static final String ACTIONBAR_TITLE = "menu_title";
+   
 
     private Context context;
+    private IMainActivity mainActivityCallBack;
     
-    public WelcomeFragment(Context context) {
+    public WelcomeFragment(IMainActivity mainActivityCallBack, Context context) {
     	this.context = context;
+    	this.mainActivityCallBack = mainActivityCallBack;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_welcome, container, false);
-        int i = getArguments().getInt(ACTIONBAR_TITLE);
+        int i = getArguments().getInt(MainActivity.FRAGMENT_POS);
         String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i];
         getActivity().setTitle(actionbarTitle);
         
@@ -52,12 +54,12 @@ public class WelcomeFragment extends Fragment {
 			public void onClick(View v) {
 				
 				Bundle args = new Bundle();
-		    	Fragment fragment = new SyslogngFragment(context, null);
-				args.putInt(SyslogngFragment.ACTIONBAR_TITLE, 2);
+		    	Fragment fragment = new SyslogngFragment(mainActivityCallBack,context, null);
+				args.putInt(MainActivity.FRAGMENT_POS, 2);
 				fragment.setArguments(args);
 				FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
 				transaction.replace(R.id.container, fragment, "fragment_addsyslogng_tag").commit();
-				MainActivity.updateDrawer(2);
+				mainActivityCallBack.updateDrawer(MainActivity.SYSLOGNG_FRAGMENT_POS);
 				
 			}
 		});

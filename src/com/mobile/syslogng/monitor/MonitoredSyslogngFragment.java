@@ -53,20 +53,21 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 
 public class MonitoredSyslogngFragment extends Fragment implements ICommandCallBack{
 
-	public static final String ACTIONBAR_TITLE = "menu_title";
 	
 	private String command;
 	private Map<Integer,Integer> itemsDisplayed = new LinkedHashMap<Integer, Integer>();
 	private HashSet<Integer> itemsSelected = new HashSet<Integer>();
 	private Context context;
+	private IMainActivity mainActivityCallBack;
 	
 	ListView listViewSyslogngs;
 	
 	
 	
 	
-	public MonitoredSyslogngFragment(Context context){
+	public MonitoredSyslogngFragment(IMainActivity mainActivityCallBack, Context context){
 		this.context = context;
+		this.mainActivityCallBack = mainActivityCallBack;
 	}
 	
     public MonitoredSyslogngFragment() {
@@ -107,7 +108,7 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
     	
     	
     	
-    	int i = getArguments().getInt(ACTIONBAR_TITLE);
+    	int i = getArguments().getInt(MainActivity.FRAGMENT_POS);
         String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i];
         
         getActivity().setTitle(actionbarTitle);
@@ -270,14 +271,14 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
     	
     	itemsSelected.clear();
     	Bundle args = new Bundle();
-    	Fragment fragment = new SyslogngFragment(context, syslogng);
-		args.putInt(SyslogngFragment.ACTIONBAR_TITLE, 2);
+    	Fragment fragment = new SyslogngFragment(mainActivityCallBack,context, syslogng);
+		args.putInt(MainActivity.FRAGMENT_POS, 2);
 		fragment.setArguments(args);
 		FragmentManager fragmentManager = getActivity().getFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		transaction.replace(R.id.container, fragment, "fragment_addsyslogng_tag");
 		transaction.commit();
-		MainActivity.updateDrawer(2);
+		mainActivityCallBack.updateDrawer(MainActivity.SYSLOGNG_FRAGMENT_POS);
     }
     
     @Override

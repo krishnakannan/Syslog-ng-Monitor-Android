@@ -25,7 +25,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
@@ -38,38 +37,33 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements IMainActivity {
 
-	private static final String APP_NAME = "Syslog-ng Monitor";
-	private static DrawerLayout mDrawerLayout;
-	private static ListView mDrawerList;
+	private String APP_NAME;
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 
-	private SharedPreferences preference = null;
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
-	private static String[] menuItems;
+	private String[] menuItems;
+	
+	public static final String FRAGMENT_POS = "fragment_pos";
+	public static final int WELCOME_FRAGMENT_POS = 0;
+	public static final int IMPORT_CERTIFICATE_FRAGMENT_POS = 1;
+	public static final int SYSLOGNG_FRAGMENT_POS = 2;
+	public static final int MONITORED_SYSLOGNG_FRAGMENT_POS = 3;
+	//public static final int ABOUT_FRAGMENT_POS = 4;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		/*
-		 * 
-		 * Setting Shared Preferences for Identifying First run of the application 
-		 * and creating Database
-		 * 
-		 */
+		APP_NAME = getApplicationContext().getString(R.string.app_title);
 		
-		preference = getSharedPreferences("com.mobile.syslogng.monitor",MODE_PRIVATE);
-		
-		if(preference.getBoolean("firstRun",true))
-		{
-			FileManager fManager = new FileManager(getApplicationContext());			
-			fManager.createCertificateDirectory();	
-			preference.edit().putBoolean("firstRun", false).commit();
-		}
+		FileManager fManager = new FileManager(getApplicationContext());			
+		fManager.createCertificateDirectory();	
 		
 		mTitle  = getTitle();
 		mDrawerTitle = APP_NAME;
@@ -77,34 +71,33 @@ public class MainActivity extends Activity {
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-		// set a custom shadow that overlays the main content when the drawer opens
+		
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		// set up the drawer's list view with items and click listener
+		
 		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.drawer_list_item, menuItems));
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-		// enable ActionBar app icon to behave as action to toggle nav drawer
+		
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 
-		// ActionBarDrawerToggle ties together the the proper interactions
-		// between the sliding drawer and the action bar app icon
+		
 		mDrawerToggle = new ActionBarDrawerToggle(
-				this,                  /* host Activity */
-				mDrawerLayout,         /* DrawerLayout object */
-				R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
-				R.string.drawer_open,  /* "open drawer" description for accessibility */
-				R.string.drawer_close  /* "close drawer" description for accessibility */
+				this,                  
+				mDrawerLayout,         
+				R.drawable.ic_drawer,  
+				R.string.drawer_open,  
+				R.string.drawer_close  
 				) {
 			public void onDrawerClosed(View view) {
 				getActionBar().setTitle(mTitle);
-				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+				invalidateOptionsMenu(); 
 			}
 
 			public void onDrawerOpened(View drawerView) {
 				getActionBar().setTitle(mDrawerTitle);
-				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+				invalidateOptionsMenu(); 
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -113,10 +106,10 @@ public class MainActivity extends Activity {
 			SQLiteManager sManager = new SQLiteManager(getApplicationContext());
 			ArrayList<Syslogng> savedData = sManager.getSyslogngs();
 			if(savedData.isEmpty()){
-				selectItem(0);
+				loadFragment(WELCOME_FRAGMENT_POS);
 			}
 			else{
-				selectItem(3);
+				loadFragment(MONITORED_SYSLOGNG_FRAGMENT_POS);
 			}
 			
 		}
@@ -124,85 +117,54 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-
-		/*
-		 * Add Menu Items to the right if needed
-		 */
-
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	/* Called whenever we call invalidateOptionsMenu() */
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-
-		// If the nav drawer is open, hide action items related to the content view
 		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// The action bar home/up action should open or close the drawer.
-		// ActionBarDrawerToggle will take care of this.
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-		// Handle action buttons if need be
 		return false;
 
 	}
 
-	/* The click listner for ListView in the navigation drawer */
+
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			selectItem(position);
+			loadFragment(position);
 		}
 	}
 
-	private void selectItem(int position) {
+	private void loadFragment(int position) {
 		
-		Integer caseNumber = position+1;
-		Fragment fragment;
-		Bundle args = new Bundle();
-		FragmentManager fragmentManager = getFragmentManager();
-		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		switch(caseNumber)
+		
+		
+		
+		
+		switch(position)
 		{
-			case 1:
-				fragment = new WelcomeFragment(getApplicationContext());
-				args.putInt(WelcomeFragment.ACTIONBAR_TITLE, position);
-				fragment.setArguments(args);
-				transaction.replace(R.id.container, fragment, "fragment_welcome_tag").commit();
+			case WELCOME_FRAGMENT_POS:
+				setFragment(new WelcomeFragment(this,getApplicationContext()), position, "fragment_welcome_tag");
+				break;
+	
+			case IMPORT_CERTIFICATE_FRAGMENT_POS:
+				setFragment(new ImportCertificateFragment(this,getApplicationContext()), position, "fragment_importcert_tag");
 				break;
 				
-//			case 2:
-//				fragment = new RunCommandFragment(getApplicationContext());
-//				args.putInt(AddUpdateInstanceFragment.ACTIONBAR_TITLE, position);
-//				fragment.setArguments(args);
-//				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
-//				break;
-				
-			case 2:
-				fragment = new ImportCertificateFragment(getApplicationContext());
-				args.putInt(MonitoredSyslogngFragment.ACTIONBAR_TITLE, position);
-				fragment.setArguments(args);
-				transaction.replace(R.id.container, fragment, "fragment_importcert_tag").commit();
+			case SYSLOGNG_FRAGMENT_POS:
+				setFragment(new SyslogngFragment(this,getApplicationContext(), null), position, "fragment_addsyslogng_tag");
 				break;
 				
-			case 3:
-				fragment = new SyslogngFragment(getApplicationContext(), null);
-				args.putInt(SyslogngFragment.ACTIONBAR_TITLE, position);
-				fragment.setArguments(args);
-				transaction.replace(R.id.container, fragment, "fragment_addsyslogng_tag").commit();
-				break;
-				
-			case 4:
-				fragment = new MonitoredSyslogngFragment(getApplicationContext());
-				args.putInt(MonitoredSyslogngFragment.ACTIONBAR_TITLE, position);
-				fragment.setArguments(args);
-				transaction.replace(R.id.container, fragment, "fragment_monitored_syslogng_tag").commit();
+			case MONITORED_SYSLOGNG_FRAGMENT_POS:
+				setFragment(new MonitoredSyslogngFragment(this,getApplicationContext()), position, "fragment_monitored_syslogng_tag");
 				break;
 				
 			
@@ -214,6 +176,16 @@ public class MainActivity extends Activity {
 		updateDrawer(position);
 		setTitle(menuItems[position]);
 		
+	}
+	
+	private void setFragment(Fragment fragment, Integer position, String tag){
+		
+		FragmentManager fragmentManager = getFragmentManager();
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		Bundle args = new Bundle();
+		args.putInt(MainActivity.FRAGMENT_POS, position);
+		fragment.setArguments(args);
+		transaction.replace(R.id.container, fragment, tag).commit();
 	}
 
 	@Override
@@ -230,18 +202,16 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
 		mDrawerToggle.syncState();
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
-	public static void updateDrawer(Integer position){
+	public void updateDrawer(Integer position){
 		
 				mDrawerList.setItemChecked(position, true);
 				mDrawerLayout.closeDrawer(mDrawerList);
