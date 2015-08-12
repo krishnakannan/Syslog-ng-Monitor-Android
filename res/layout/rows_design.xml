@@ -7,6 +7,7 @@
     <TextView 
     android:id="@+id/textview_instance_name"
     android:textSize="22sp"
+    android:singleLine="true"
     android:textColor="@color/black"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"

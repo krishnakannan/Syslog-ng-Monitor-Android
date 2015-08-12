@@ -195,7 +195,7 @@ public class MainActivity extends Activity {
 				fragment = new SyslogngFragment(getApplicationContext(), null);
 				args.putInt(SyslogngFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
-				transaction.replace(R.id.container, fragment, "fragment_importcert_tag").commit();
+				transaction.replace(R.id.container, fragment, "fragment_addsyslogng_tag").commit();
 				break;
 				
 			case 4:

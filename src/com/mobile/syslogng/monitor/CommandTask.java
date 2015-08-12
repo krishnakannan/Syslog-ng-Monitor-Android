@@ -123,7 +123,7 @@ public class CommandTask extends AsyncTask<String, Void, String>{
 			
 			KeyManager[] keyManagers = null;
 			sct = SSLContext.getInstance("TLS");
-			if(certificateFileName != null){
+			if(certificateFileName != null && !certificateFileName.equals("")){
 				keyManagers = getKeyManagers();
 			}
 			sct.init(keyManagers, trustAllCertificates, new SecureRandom());

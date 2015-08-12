@@ -52,7 +52,7 @@ public class SyslogngFragment extends Fragment {
 	private EditText editTextHostName;
 	private EditText editTextPortNumber;
 	private EditText etCertificatePasswordText;
-	private EditText editTextInstanceName;
+	private EditText editTextSyslogngName;
 	private Boolean isClientCertificateUsed = false;
 	private Syslogng syslogng;
 	
@@ -103,7 +103,7 @@ public class SyslogngFragment extends Fragment {
 		
 		
 		
-        editTextInstanceName = (EditText) rootView.findViewById(R.id.ai_et_syslogng_name);
+        editTextSyslogngName = (EditText) rootView.findViewById(R.id.ai_et_syslogng_name);
         editTextHostName = (EditText) rootView.findViewById(R.id.ai_et_syslogng_input);
         editTextPortNumber = (EditText) rootView.findViewById(R.id.ai_et_port_input);
         
@@ -174,9 +174,20 @@ public class SyslogngFragment extends Fragment {
 
     }
     
+    private Syslogng copySyslogng(Syslogng syslogng){
+    	Syslogng syslog_ng = new Syslogng();
+    	syslog_ng.setCertificateFileName(syslogng.getCertificateFileName());
+    	syslog_ng.setCertificatePassword(syslogng.getCertificatePassword());
+    	syslog_ng.setHostName(syslogng.getHostName());
+    	syslog_ng.setKey(syslogng.getKey());
+    	syslog_ng.setPortNumber(syslogng.getPortNumber());
+    	syslog_ng.setSyslogngName(syslogng.getSyslogngName());
+    	return syslog_ng;
+    }
+    
     private void insertSyslogng(){
     	
-    	Syslogng syslogng = this.syslogng;
+    	Syslogng syslogng = copySyslogng(this.syslogng);
     	
     	
     		
@@ -203,7 +214,7 @@ public class SyslogngFragment extends Fragment {
     
     private void updateSyslogng(){
     	
-    	Syslogng syslogng = this.syslogng;
+    	Syslogng syslogng = copySyslogng(this.syslogng);
     	
     	
     	if(this.syslogng.getKey() != null){
@@ -235,7 +246,7 @@ public class SyslogngFragment extends Fragment {
     	if(syslogng != null && syslogng.getKey() != null){
     		
     	
-    		editTextInstanceName.setText(syslogng.getSyslogngName());
+    		editTextSyslogngName.setText(syslogng.getSyslogngName());
     		editTextHostName.setText(syslogng.getHostName());
     		editTextPortNumber.setText(syslogng.getPortNumber());
     	
@@ -287,7 +298,7 @@ public class SyslogngFragment extends Fragment {
 		
 		Integer tempPortNumber;
         
-        syslogng.setSyslogngName(editTextInstanceName.getText().toString());
+        syslogng.setSyslogngName(editTextSyslogngName.getText().toString());
         syslogng.setHostName(editTextHostName.getText().toString());
         syslogng.setPortNumber(editTextPortNumber.getText().toString());
         
@@ -302,7 +313,7 @@ public class SyslogngFragment extends Fragment {
         		else{
         			insertSyslogng();
         		}
-        		editTextInstanceName.setText("");
+        		editTextSyslogngName.setText("");
             	editTextHostName.setText("");
             	editTextPortNumber.setText("");
             	etCertificatePasswordText.setText("");
