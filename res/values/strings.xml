@@ -4,8 +4,8 @@
     <string name="app_title">Syslog-ng Monitor</string>
     <string name="app_name">Syslog-ng-Monitor-Android</string>
     <string name="add_instance_title">Enter the server details you want to save and connect</string>
-    <string name="add_syslogng">Add Instance</string>
-    <string name="add_instances">Add Instances</string>
+    <string name="add_syslogng">Add Syslog-ng</string>
+    <string name="add_syslogngs">Add Syslog-ng(s)</string>
     <string name="select_command">Select Command</string>
     <string name="run_command">Run Command</string>
     <string name="host_hint">Enter Hostname</string>
@@ -19,7 +19,7 @@
     <string name="title_activity_temp_connector">TempConnector</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="home">Welcome to Syslog-ng Monitor application \n Start monitoring by adding the instances. </string>
-    <string name="view_instances">View Instances</string>
+   
     <string name="about">About</string>
     <string name="import_certificate">Import Certificate</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -49,8 +49,8 @@
     <string name="title_activity_result">ResultActivity</string>
     <string name="hello_world">Hello world!</string>
     
-    <string name="insert_instance_success">Instance successfully added into Database</string>
-    <string name="insert_instance_failure">There was a problem occurred in adding Instance</string> 
+    <string name="insert_syslogng_success">Syslog-ng successfully added into Database</string>
+    <string name="insert_syslogng_failure">There was a problem occurred in adding Syslog-ng</string> 
     <string name="port_error">Port entered is not a Number</string>
     <string name="host_port_error">Enter valid host/port details</string>
     
@@ -83,10 +83,10 @@
 	<!-- View Instance Fragment -->
 	
 	<string name="delete_success">Deleted Successfully</string>
-    <string name="delete_failure">Some problem occurred in deleting instance</string>
+    <string name="delete_failure">Some problem occurred in deleting Syslog-ng</string>
     <string name="edit_success">Edited Successfully</string>
-    <string name="edit_failure">Some problem occurred in editing instance</string>
-    <string name="edit_validation_failure">Select any one instance for editing</string>
+    <string name="edit_failure">Some problem occurred in editing Syslog-ng</string>
+    <string name="edit_validation_failure">Select any one Syslog-ng for editing</string>
     
     <!-- Command Dialog  -->
     <string name="radio_stats">stats</string>

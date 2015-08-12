@@ -206,11 +206,11 @@ public class SyslogngFragment extends Fragment {
         if(changeStatus){
         	
         	
-        	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.insert_instance_success) , Toast.LENGTH_LONG).show();
+        	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.insert_syslogng_success) , Toast.LENGTH_LONG).show();
         	
         }
         else{
-        	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.insert_instance_failure) , Toast.LENGTH_LONG).show();
+        	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.insert_syslogng_failure) , Toast.LENGTH_LONG).show();
         }
     }
     
@@ -219,9 +219,6 @@ public class SyslogngFragment extends Fragment {
     	Syslogng syslogng = copySyslogng(this.syslogng);
     	
     	
-    	if(this.syslogng.getKey() != null){
-    		syslogng.setKey(this.syslogng.getKey());
-    	}
     	SQLiteManager sManager = new SQLiteManager(getActivity().getApplicationContext());
     	if(isClientCertificateUsed){
             changeStatus = sManager.updateSyslogng(syslogng); 
@@ -235,11 +232,11 @@ public class SyslogngFragment extends Fragment {
         if(changeStatus){
         	
         	
-        	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.insert_instance_success) , Toast.LENGTH_LONG).show();
+        	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.insert_syslogng_success) , Toast.LENGTH_LONG).show();
         	
         }
         else{
-        	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.insert_instance_failure) , Toast.LENGTH_LONG).show();
+        	Toast.makeText(getActivity().getApplicationContext(), context.getString(R.string.insert_syslogng_failure) , Toast.LENGTH_LONG).show();
         }
     }
     
@@ -251,16 +248,16 @@ public class SyslogngFragment extends Fragment {
     		editTextSyslogngName.setText(syslogng.getSyslogngName());
     		editTextHostName.setText(syslogng.getHostName());
     		editTextPortNumber.setText(syslogng.getPortNumber());
-    	
-    		spinnerClientCertificate.setVisibility(View.VISIBLE);
-        	etCertificatePasswordText.setVisibility(View.VISIBLE);
-    	
+   
     		if(syslogng.getCertificateFileName() != null && !syslogng.getCertificateFileName().equals("")){
+    			spinnerClientCertificate.setVisibility(View.VISIBLE);
+            	etCertificatePasswordText.setVisibility(View.VISIBLE);
     			isClientCertificateUsed = true;
     			cbIncludeCertificate.setChecked(true);
     			spinnerClientCertificate.setSelection(certAdapter.getPosition("certificateFileName"));
     			etCertificatePasswordText.setText(syslogng.getCertificatePassword());
     		}
+    		
     	}
     }
     
