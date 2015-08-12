@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -166,14 +167,14 @@ public class MainActivity extends Activity {
 		Fragment fragment;
 		Bundle args = new Bundle();
 		FragmentManager fragmentManager = getFragmentManager();
-		
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		switch(caseNumber)
 		{
 			case 1:
 				fragment = new WelcomeFragment(getApplicationContext());
 				args.putInt(WelcomeFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
-				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+				transaction.replace(R.id.container, fragment, "fragment_welcome_tag").commit();
 				break;
 				
 //			case 2:
@@ -187,21 +188,21 @@ public class MainActivity extends Activity {
 				fragment = new ImportCertificateFragment(getApplicationContext());
 				args.putInt(MonitoredSyslogngFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
-				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+				transaction.replace(R.id.container, fragment, "fragment_importcert_tag").commit();
 				break;
 				
 			case 3:
 				fragment = new SyslogngFragment(getApplicationContext(), null);
 				args.putInt(SyslogngFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
-				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+				transaction.replace(R.id.container, fragment, "fragment_importcert_tag").commit();
 				break;
 				
 			case 4:
 				fragment = new MonitoredSyslogngFragment(getApplicationContext());
 				args.putInt(MonitoredSyslogngFragment.ACTIONBAR_TITLE, position);
 				fragment.setArguments(args);
-				fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+				transaction.replace(R.id.container, fragment, "fragment_monitored_syslogng_tag").commit();
 				break;
 				
 			

@@ -275,7 +275,7 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
 		fragment.setArguments(args);
 		FragmentManager fragmentManager = getActivity().getFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		transaction.replace(R.id.container, fragment);
+		transaction.replace(R.id.container, fragment, "fragment_addsyslogng_tag");
 		transaction.commit();
 		MainActivity.updateDrawer(2);
     }

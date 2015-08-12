@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -277,7 +278,8 @@ public class SyslogngFragment extends Fragment {
     	Fragment fragment = new ImportCertificateFragment(context);
 		args.putInt(SyslogngFragment.ACTIONBAR_TITLE, 1);
 		fragment.setArguments(args);
-		getActivity().getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+		FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+		transaction.replace(R.id.container, fragment, "fragment_importcert_tag").commit();
 		MainActivity.updateDrawer(1);
 	}
 	

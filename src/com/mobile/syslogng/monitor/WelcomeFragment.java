@@ -19,6 +19,7 @@
 package com.mobile.syslogng.monitor;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -54,7 +55,8 @@ public class WelcomeFragment extends Fragment {
 		    	Fragment fragment = new SyslogngFragment(context, null);
 				args.putInt(SyslogngFragment.ACTIONBAR_TITLE, 2);
 				fragment.setArguments(args);
-				getActivity().getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+				FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+				transaction.replace(R.id.container, fragment, "fragment_addsyslogng_tag").commit();
 				MainActivity.updateDrawer(2);
 				
 			}
