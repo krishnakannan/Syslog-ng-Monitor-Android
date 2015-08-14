@@ -240,6 +240,7 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
     	for(Integer item : itemsSelected){
     		itemsToDelete.add(itemsDisplayed.get(item)); 
     	}
+    	itemsSelected.clear();
     	return sManager.deleteSyslogngs(itemsToDelete);
     }
     
@@ -247,20 +248,25 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
     	ArrayList<HashMap<String,String>> dataList = new ArrayList<HashMap<String, String>>();
     	for(Syslogng items : list){
     		 HashMap<String,String> dataListItem = new HashMap<String,String>();
-    		 dataListItem.put("InstanceName", items.getSyslogngName());
+    		 dataListItem.put("SyslogngName", items.getSyslogngName());
     		 dataListItem.put("HostName", items.getHostName());
     		 dataListItem.put("PortNumber", items.getPortNumber());
     		 dataList.add(dataListItem);
     	}
     	return new SimpleAdapter(getActivity().getBaseContext(), dataList, R.layout.rows_design, 
-    			new String[] { "InstanceName", "HostName", "PortNumber"}, 
+    			new String[] { "SyslogngName", "HostName", "PortNumber"}, 
     			new int[] { R.id.textview_instance_name, R.id.textview_hostname, R.id.textview_portnumber });
     }
     
     
     
     private void reloadListView(){
-    	
+    	syslogngs = sManager.getSyslogngs();
+    	Integer iterator = 0;
+    	itemsDisplayed.clear();
+        for(Syslogng syslogng : syslogngs){
+        	itemsDisplayed.put(iterator++, syslogng.getKey());
+        }
     	listViewSyslogngs.setAdapter(getListViewAdapter(sManager.getSyslogngs()));
     	listViewSyslogngs.invalidate();
     }

@@ -261,14 +261,14 @@ public class SyslogngFragment extends Fragment {
     	}
     }
     
-    private Boolean checkHostValidity(String instanceString){
+    private Boolean checkHostValidity(String syslogngHostName){
 		
-		return (instanceString != null && !instanceString.equals(""));
+		return (syslogngHostName != null && !syslogngHostName.equals(""));
 	}
 	
-    private Boolean checkInstanceNameValidity(String instanceName){
+    private Boolean checkInstanceNameValidity(String syslogngName){
 		
-		return (instanceName != null && !instanceName.equals(""));
+		return (syslogngName != null && !syslogngName.equals(""));
 	}
 	
 	private Boolean checkPortValidity(String portString){
