@@ -37,7 +37,7 @@
         <item>Welcome</item>
         <item>Import Certificate</item>
         <item>Add/Update Syslog-ng to monitor</item>
-        <item>Monitered Syslog-ng(s)</item>
+        <item>Monitored Syslog-ng(s)</item>
         <item>About</item>
     </string-array>
     <string-array name="command_array">
