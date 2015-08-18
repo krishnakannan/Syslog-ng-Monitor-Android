@@ -30,8 +30,6 @@ import java.util.Map;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -276,15 +274,7 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
     		Log.i("instanceData", syslogng.getHostName()+" "+ syslogng.getPortNumber() +" "+ syslogng.getKey());
     	
     	itemsSelected.clear();
-    	Bundle args = new Bundle();
-    	Fragment fragment = new SyslogngFragment(mainActivityCallBack,context, syslogng);
-		args.putInt(MainActivity.FRAGMENT_POS, 2);
-		fragment.setArguments(args);
-		FragmentManager fragmentManager = getActivity().getFragmentManager();
-		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		transaction.replace(R.id.container, fragment, "fragment_addsyslogng_tag");
-		transaction.commit();
-		mainActivityCallBack.updateDrawer(MainActivity.SYSLOGNG_FRAGMENT_POS);
+    	mainActivityCallBack.setFragment(new SyslogngFragment(mainActivityCallBack,context, syslogng), MainActivity.SYSLOGNG_FRAGMENT_POS, "fragment_addsyslogng_tag");
     }
     
     @Override

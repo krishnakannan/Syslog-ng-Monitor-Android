@@ -20,7 +20,6 @@ package com.mobile.syslogng.monitor;
 
 
 import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -48,12 +47,14 @@ public class MainActivity extends Activity implements IMainActivity {
 	private CharSequence mTitle;
 	private String[] menuItems;
 	
+	public Integer stackCount = 0;
+	
 	public static final String FRAGMENT_POS = "fragment_pos";
 	public static final int WELCOME_FRAGMENT_POS = 0;
 	public static final int IMPORT_CERTIFICATE_FRAGMENT_POS = 1;
 	public static final int SYSLOGNG_FRAGMENT_POS = 2;
 	public static final int MONITORED_SYSLOGNG_FRAGMENT_POS = 3;
-	//public static final int ABOUT_FRAGMENT_POS = 4;
+	public static final int ABOUT_FRAGMENT_POS = 4;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -167,7 +168,8 @@ public class MainActivity extends Activity implements IMainActivity {
 				setFragment(new MonitoredSyslogngFragment(this,getApplicationContext()), position, "fragment_monitored_syslogng_tag");
 				break;
 				
-			
+			case ABOUT_FRAGMENT_POS:
+				setFragment(new AboutFragment(this, getApplicationContext()), position, "fragment_about_tag");
 			
 			default:
 				break;
@@ -178,16 +180,35 @@ public class MainActivity extends Activity implements IMainActivity {
 		
 	}
 	
-	private void setFragment(Fragment fragment, Integer position, String tag){
+	public void setFragment(Fragment fragment, Integer position, String tag){
 		
 		FragmentManager fragmentManager = getFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		Bundle args = new Bundle();
 		args.putInt(MainActivity.FRAGMENT_POS, position);
 		fragment.setArguments(args);
+		String cTag = "empty";
+		Fragment currentFragment = fragmentManager.findFragmentById(R.id.container);
+		if(currentFragment != null){
+			cTag = currentFragment.getTag();
+				if(!cTag.equals(tag)){
+					if(currentFragment instanceof WelcomeFragment || currentFragment instanceof MonitoredSyslogngFragment || currentFragment instanceof AboutFragment){
+						stackCount = 0;
+						transaction.addToBackStack(cTag);
+						stackCount++;
+					}
+					else{
+						if(stackCount < 2){
+							transaction.addToBackStack(cTag);
+							stackCount++;
+						}
+					}
+				}
+			}
 		transaction.replace(R.id.container, fragment, tag).commit();
 	}
-
+	
+	
 	@Override
 	public void setTitle(CharSequence title) {
 		mTitle = title;
@@ -216,6 +237,73 @@ public class MainActivity extends Activity implements IMainActivity {
 				mDrawerList.setItemChecked(position, true);
 				mDrawerLayout.closeDrawer(mDrawerList);
 	}
+	
+	private String checkFragment(){
+		String currentFragment = null;
+		Fragment importFragment = getFragmentManager().findFragmentByTag("fragment_importcert_tag");
+		Fragment addSyslogngFragment = getFragmentManager().findFragmentByTag("fragment_addsyslogng_tag");
+		if((importFragment != null && importFragment.isVisible()) ){
+				currentFragment = importFragment.getTag();
+		}
+		else if(addSyslogngFragment != null && addSyslogngFragment.isVisible()){
+				currentFragment = addSyslogngFragment.getTag();
+			}
+			return currentFragment;
+	}
+	
+	
+	
+	@Override
+    public void onBackPressed()
+    {
+		String currentFragmentTag = checkFragment();
+        if(currentFragmentTag != null){
+        	popBackFragment(currentFragmentTag);
+        	updateDrawer(getFragmentPosition());
+        }
+        else{
+        	finish();
+        }
+    }
+	
+	private Integer getFragmentPosition(){
+		Fragment fragment = getFragmentManager().findFragmentById(R.id.container);
+		
+		if(fragment instanceof ImportCertificateFragment){
+			return IMPORT_CERTIFICATE_FRAGMENT_POS;
+		}
+		if(fragment instanceof SyslogngFragment){
+			return SYSLOGNG_FRAGMENT_POS;
+		}
+		if(fragment instanceof WelcomeFragment){
+			return WELCOME_FRAGMENT_POS;
+		}
+		if(fragment instanceof MonitoredSyslogngFragment){
+			return MONITORED_SYSLOGNG_FRAGMENT_POS;
+		}
+		if(fragment instanceof AboutFragment){
+			return ABOUT_FRAGMENT_POS;
+		}
+		return -1;
+	}
+	
+	private void popBackFragment(String removalFragmentTag){
+		
+		Fragment currentFragment = getFragmentManager().findFragmentById(R.id.container);
+	
+		if(currentFragment.getTag().equals(getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1).getName())){
+			getFragmentManager().popBackStack();
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+	    	transaction.remove(currentFragment).commit();
+	    	getFragmentManager().executePendingTransactions();
+		}
+		getFragmentManager().popBackStack();
+    	Fragment removalFragment = getFragmentManager().findFragmentByTag(removalFragmentTag);
+    	FragmentTransaction transaction = getFragmentManager().beginTransaction();
+    	transaction.remove(removalFragment).commit();
+    	getFragmentManager().executePendingTransactions();
+	}
+	
 	
 
 }

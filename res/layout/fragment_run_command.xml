@@ -64,7 +64,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="@string/add_instance_title" />
+        android:text="@string/add_syslogng_title" />
 
     <CheckBox
         android:id="@+id/cb_include_certificate"

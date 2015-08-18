@@ -3,7 +3,7 @@
 	
     <string name="app_title">Syslog-ng Monitor</string>
     <string name="app_name">Syslog-ng-Monitor-Android</string>
-    <string name="add_instance_title">Enter the server details you want to save and connect</string>
+    <string name="add_syslogng_title">Enter the Syslog-ng details you want to save and connect</string>
     <string name="add_syslogng">Add Syslog-ng</string>
     <string name="add_syslogngs">Add Syslog-ng(s)</string>
     <string name="select_command">Select Command</string>
@@ -18,7 +18,7 @@
     <string name="msgwindow_close_button">Close</string>
     <string name="title_activity_temp_connector">TempConnector</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="home">Welcome to Syslog-ng Monitor application \n Start monitoring by adding the instances. </string>
+    <string name="home">Welcome to Syslog-ng Monitor application \n Start monitoring by adding the Syslog-ng(s). </string>
    
     <string name="about">About</string>
     <string name="import_certificate">Import Certificate</string>
@@ -62,7 +62,7 @@
     
     <!-- Import Certificate Fragment -->
     
-    <string name="ic_title"> Import the Certificate in pcks12 format</string>
+    <string name="ic_title"> Import the Certificate in pkcs12 format</string>
     <string name="ic_file_hint"> Filename for storing</string>
 	<string name="ic_file_select_btn">Select Certificate</string>
 	<string name="ic_import_btn">Import</string>
@@ -93,5 +93,8 @@
     <string name="radio_is_alive">is_alive</string>
     <string name="radio_show_config">show_config</string>
     
+    <!-- About Fragment -->
+    <string name="about_syslogng">Syslog-ng is an open source implementation of the Syslog protocol for Unix and Unix-like systems. It extends the original syslogd model with content-based filtering, rich filtering capabilities, flexible configuration options and adds important features to syslog, like using TCP for transport.</string>
+    <string name="about_syslogng_monitor">This application Syslog-ng Monitor for Android is useful in monitoring Syslog-ng(s). With this application, you can execute various commands to know whether the monitored Syslog-ng is alive, get current statistics of Syslog-ng(s), and to view the configuration of Syslog-ng. In this application you can add/store details of Syslog-ng(s) to monitor with ease. You can also edit and delete the details listed after storing. After storing the details you can perform the above mentioned commands on single click.</string>
     
 </resources>

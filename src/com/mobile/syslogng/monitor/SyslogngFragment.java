@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -284,13 +283,8 @@ public class SyslogngFragment extends Fragment {
 	}
 	
 	private void btnImportCertificateOnClick(){
-		Bundle args = new Bundle();
-    	Fragment fragment = new ImportCertificateFragment(mainActivityCallBack, context);
-		args.putInt(MainActivity.FRAGMENT_POS, 1);
-		fragment.setArguments(args);
-		FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-		transaction.replace(R.id.container, fragment, "fragment_importcert_tag").commit();
-		mainActivityCallBack.updateDrawer(MainActivity.IMPORT_CERTIFICATE_FRAGMENT_POS);
+		
+		mainActivityCallBack.setFragment(new ImportCertificateFragment(mainActivityCallBack, context), MainActivity.IMPORT_CERTIFICATE_FRAGMENT_POS, "fragment_importcert_tag");
 	}
 	
 	private void btnAddSyslogngOnClick(){
