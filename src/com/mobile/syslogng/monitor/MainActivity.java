@@ -175,13 +175,14 @@ public class MainActivity extends Activity implements IMainActivity {
 				break;
 		}
 		
-		updateDrawer(position);
+		
 		setTitle(menuItems[position]);
 		
 	}
 	
 	public void setFragment(Fragment fragment, Integer position, String tag){
 		
+		updateDrawer(position);
 		FragmentManager fragmentManager = getFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		Bundle args = new Bundle();

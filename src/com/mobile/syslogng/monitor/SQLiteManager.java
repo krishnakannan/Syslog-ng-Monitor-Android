@@ -63,7 +63,6 @@ static final String DATABASENAME = "instances.db";
 		
 		db.execSQL(CREATETABLE);
 		
-		Log.i("CREATE DB", "in onCreate Method");
 	}
 
 	@Override
@@ -74,59 +73,66 @@ static final String DATABASENAME = "instances.db";
 
 	public Boolean insertSyslogng(Syslogng syslogng)
 	{
-		Boolean status = true;
+		Boolean status = false;
 		SQLiteDatabase db = getWritableDatabase();
 			SQLiteStatement insertStatement = db.compileStatement(INSERT);
-			insertStatement.bindString(1, syslogng.getSyslogngName());
-			insertStatement.bindString(2, syslogng.getHostName());
-			insertStatement.bindString(3, syslogng.getPortNumber());
-			if(syslogng.getCertificateFileName() != null){
-				insertStatement.bindString(4, syslogng.getCertificateFileName());
+			if(syslogng != null){
+				insertStatement.bindString(1, syslogng.getSyslogngName());
+				insertStatement.bindString(2, syslogng.getHostName());
+				insertStatement.bindString(3, syslogng.getPortNumber());
+				if(syslogng.getCertificateFileName() != null){
+					insertStatement.bindString(4, syslogng.getCertificateFileName());
+				}
+				if(syslogng.getCertificatePassword() != null){
+					insertStatement.bindString(5, syslogng.getCertificatePassword());
+				}
+				try{
+					insertStatement.executeInsert();
+					status = true;
+				}
+				catch(SQLException e){
+					status = false;
+				}
+				finally{
+					insertStatement.close();
+					db.close();
+				}
 			}
-			if(syslogng.getCertificatePassword() != null){
-				insertStatement.bindString(5, syslogng.getCertificatePassword());
-			}
-			
-			
-			try{
-				insertStatement.executeInsert();
-			}
-			catch(SQLException e){
-				status = false;
-			}
-			finally{
-				insertStatement.close();
-				db.close();
-			}	
+				
 			
 		return status;
 	}
 	
 	public Boolean updateSyslogng(Syslogng syslogng){
-		Boolean status = true;
+		Boolean status = false;
 		SQLiteDatabase db = getWritableDatabase();
 		
 		SQLiteStatement updateStatement = db.compileStatement(UPDATE);
-		updateStatement.bindString(1, syslogng.getSyslogngName());
-		updateStatement.bindString(2, syslogng.getHostName());
-		updateStatement.bindString(3, syslogng.getPortNumber());
-		if(syslogng.getCertificateFileName() != null){
-			updateStatement.bindString(4, syslogng.getCertificateFileName());
+		if(syslogng != null){
+			updateStatement.bindString(1, syslogng.getSyslogngName());
+			updateStatement.bindString(2, syslogng.getHostName());
+			updateStatement.bindString(3, syslogng.getPortNumber());
+			if(syslogng.getCertificateFileName() != null){
+				updateStatement.bindString(4, syslogng.getCertificateFileName());
+			}
+			if(syslogng.getCertificatePassword() != null){
+				updateStatement.bindString(5, syslogng.getCertificatePassword());
+			}
+			updateStatement.bindString(6, Integer.toString(syslogng.getKey()));
+			
+			try{
+				updateStatement.executeUpdateDelete();
+				status = true;
+			}
+			catch(SQLException e){
+				status = false;
+			}
+			finally{
+				updateStatement.close();
+				db.close();
+			}
 		}
-		if(syslogng.getCertificatePassword() != null){
-			updateStatement.bindString(5, syslogng.getCertificatePassword());
-		}
-		updateStatement.bindString(6, Integer.toString(syslogng.getKey()));
-		try{
-			updateStatement.executeUpdateDelete();
-		}
-		catch(SQLException e){
-			status = false;
-		}
-		finally{
-			updateStatement.close();
-			db.close();
-		}
+		
 		
 		
 		return status;
@@ -161,22 +167,22 @@ static final String DATABASENAME = "instances.db";
 		Boolean status = false;
 		SQLiteDatabase db = getWritableDatabase();
 		SQLiteStatement deleteStatement = db.compileStatement(DELETE);
-		try{
-			
-		for(Integer itemKey : itemsToDelete){
-			deleteStatement.bindString(1, Integer.toString(itemKey));
-			deleteStatement.executeUpdateDelete();
+		if(itemsToDelete != null){
+			try{
+				for(Integer itemKey : itemsToDelete){
+					deleteStatement.bindString(1, Integer.toString(itemKey));
+					deleteStatement.executeUpdateDelete();
+				}
+				status = true;
 			}
-			status = true;
+			catch(SQLException e){
+				status = false;
+			}
+			finally{
+				deleteStatement.close();
+				db.close();
+			}
 		}
-		catch(SQLException e){
-			status = false;
-		}
-		finally{
-			deleteStatement.close();
-			db.close();
-		}
-		
 		return status;
 	}
 }
