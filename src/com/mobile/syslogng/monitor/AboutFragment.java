@@ -41,6 +41,12 @@ public class AboutFragment extends Fragment{
 		this.mainActivityCallBack = mainActivityCallBack;
 	}
 	
+	@Override
+	public void onCreate(Bundle savedInstanceState){
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+	}
+	
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	            Bundle savedInstanceState) {

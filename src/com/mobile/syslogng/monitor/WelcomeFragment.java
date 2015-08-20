@@ -33,6 +33,10 @@ public class WelcomeFragment extends Fragment {
     private Context context;
     private IMainActivity mainActivityCallBack;
     
+    public WelcomeFragment(){
+    	
+    }
+    
     public WelcomeFragment(IMainActivity mainActivityCallBack, Context context) {
     	this.context = context;
     	this.mainActivityCallBack = mainActivityCallBack;
