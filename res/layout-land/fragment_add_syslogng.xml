@@ -4,20 +4,19 @@
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
     
-     
-    <EditText
+      <EditText
         android:id="@+id/ai_et_syslogng_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/ai_et_syslogng_input"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="38dp"
         android:layout_alignStart="@+id/ai_et_port_input"
         android:layout_alignEnd="@+id/ai_et_port_input"
         android:layout_alignRight="@+id/ai_et_port_input"
         android:layout_alignLeft="@+id/ai_et_port_input"
         android:ems="10"
         android:hint="@string/syslogng_name_hint"
-        android:imeOptions="actionNext"
+        android:imeOptions="actionDone"
         android:singleLine="true">
           <requestFocus />
      </EditText>
@@ -31,11 +30,10 @@
         android:layout_alignEnd="@+id/ai_et_port_input"
         android:layout_alignRight="@+id/ai_et_port_input"
         android:layout_alignLeft="@+id/ai_et_port_input"
-        android:layout_marginBottom="25dp"
-        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="38dp"
         android:ems="10"
         android:hint="@string/host_hint"
-        android:imeOptions="actionNext"
+        android:imeOptions="actionDone"
         android:singleLine="true"
          />
     
@@ -43,50 +41,59 @@
         android:id="@+id/ai_et_port_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/ai_cb_include_certificate"
-        android:layout_marginBottom="25dp"
-        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/LinearLayout02"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="38dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:ems="10"
         android:hint="@string/port_hint"
         android:imeOptions="actionDone"
-        android:singleLine="true" >
-
-       
-    </EditText>
+        android:singleLine="true" />
+    
 
     <CheckBox
         android:id="@+id/ai_cb_include_certificate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/ai_et_syslogng_name"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="38dp"
         android:text="@string/rc_checkbox" />
-
+    
+    
     <Spinner
         android:id="@+id/ai_spinner_certificate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ai_et_port_input"
-        android:layout_alignStart="@+id/ai_et_port_input"
-        android:layout_alignRight="@+id/ai_et_port_input"
-        android:layout_alignEnd="@+id/ai_et_port_input"
+        android:layout_alignLeft="@+id/ai_cb_include_certificate"
+        android:layout_alignStart="@+id/ai_cb_include_certificate"
+        android:layout_alignRight="@+id/ai_cb_include_certificate"
+        android:layout_alignEnd="@+id/ai_cb_include_certificate"
         android:layout_below="@+id/ai_cb_include_certificate"
-        android:layout_marginTop="25dp"
+        android:layout_marginBottom="38dp"
         />
-
-   
+    
     <EditText
         android:id="@+id/ai_et_certificate_pass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ai_cb_include_certificate"
+        android:layout_alignStart="@+id/ai_cb_include_certificate"
+        android:layout_alignRight="@+id/ai_cb_include_certificate"
+        android:layout_alignEnd="@+id/ai_cb_include_certificate"
         android:layout_below="@+id/ai_spinner_certificate"
-        android:layout_marginTop="25dp"
-        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/LinearLayout02"
+        android:layout_marginBottom="38dp"
         android:ems="10" 
         android:hint="@string/rc_certificatepass_hint"
         android:imeOptions="actionDone"
         android:singleLine="true"/>
-
+    
     <LinearLayout 
     android:id="@+id/LinearLayout02" 
     android:layout_height="wrap_content" 
@@ -112,4 +119,7 @@
          android:textSize="15sp" 
          />
     </LinearLayout>
+
+    
+
 </RelativeLayout>

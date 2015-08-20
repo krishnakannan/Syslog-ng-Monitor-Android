@@ -26,6 +26,7 @@ import java.util.List;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,9 +84,12 @@ public class SyslogngFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+    	
         View rootView = inflater.inflate(R.layout.fragment_add_syslogng, container, false);
         int i = getArguments().getInt(MainActivity.FRAGMENT_POS);
         String actionbarTitle = getResources().getStringArray(R.array.menu_array)[i];
+        
+        
         FileManager fManager = new FileManager(context);
         File certificateDir = new File(fManager.getCertificateDirectory());
         

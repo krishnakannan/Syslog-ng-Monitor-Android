@@ -57,7 +57,8 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
 	private HashSet<Integer> itemsSelected = new HashSet<Integer>();
 	private Context context;
 	private IMainActivity mainActivityCallBack;
-	
+	private AlertDialog resultDialog;
+	private AlertDialog commandDialog;
 	ListView listViewSyslogngs;
 	
 	
@@ -230,7 +231,11 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
 		    
 		     
 		    dialog.setIconAttribute(android.R.attr.alertDialogIcon);
-		    dialog.show();
+		    commandDialog = dialog.create();
+		    
+		    commandDialog.show();
+		    
+		    
 			
 		}
     	   
@@ -312,32 +317,49 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
 
 	private void showResult(String message, Boolean isException){
 		
+		resultDialog = getAlertDialog(message, isException);
+		resultDialog.show();
+		
+		
+	}
+
+	
+	private AlertDialog getAlertDialog(String message, Boolean isException){
 		if(isException){
-			new AlertDialog.Builder(getActivity())
+			return new AlertDialog.Builder(getActivity())
 		    .setTitle(R.string.error)
 		    .setMessage(message)
 		    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int which) { 
 		            
 		        }
-		     }).setIconAttribute(android.R.attr.alertDialogIcon)
-		     .show();	
+		     }).setIconAttribute(android.R.attr.alertDialogIcon).create();
+		     
 		}
 		else{
-			new AlertDialog.Builder(getActivity())
+			return new AlertDialog.Builder(getActivity())
 		    .setTitle(R.string.result)
 		    .setMessage(message)
 		    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int which) { 
 		            
 		        }
-		     }).setIconAttribute(android.R.attr.icon)
-		     .show();
+		     }).setIconAttribute(android.R.attr.icon).create();
+		     
 		}
-		
-		
 	}
-
 	
+	@Override
+	public void onStop() {
+	    super.onStop();
 
+	    if(resultDialog != null){
+	    	resultDialog.dismiss();
+	    }
+	    
+	    if(commandDialog != null){
+	    	commandDialog.dismiss();
+	    }
+	    
+	}
 }

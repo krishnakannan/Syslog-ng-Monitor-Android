@@ -21,24 +21,13 @@
         android:theme="@style/SyslogTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".TempConnector"
-            android:label="@string/title_activity_temp_connector" >
-        </activity>
-        <activity
-            android:name=".TempMainActivity"
-            android:label="@string/title_activity_main" >
-        </activity>
-        <activity
-            android:name=".TempResultActivity"
-            android:label="@string/title_activity_result" >
         </activity>
     </application>
 
