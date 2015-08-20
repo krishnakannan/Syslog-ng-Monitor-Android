@@ -32,6 +32,8 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
@@ -306,15 +308,29 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
     
     @Override
 	public void commandExecutionStart() {
-		// TODO Auto-generated method stub
+    	lockScreenOrientation();
 		
 	}
 
 	@Override
 	public void commandExecutionEnd(String result, Boolean isException) {
-		showResult(result, isException);	
+		showResult(result, isException);
 	}
 
+	private void lockScreenOrientation() {
+	    int currentOrientation = getResources().getConfiguration().orientation;
+	    if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+	        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	    } else {
+	        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+	    }
+	}
+	
+	private void unlockScreenOrientation() {
+	    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+	}
+	
+	
 	private void showResult(String message, Boolean isException){
 		
 		resultDialog = getAlertDialog(message, isException);
@@ -331,7 +347,7 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
 		    .setMessage(message)
 		    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int which) { 
-		            
+		        	unlockScreenOrientation();
 		        }
 		     }).setIconAttribute(android.R.attr.alertDialogIcon).create();
 		     
@@ -342,7 +358,7 @@ public class MonitoredSyslogngFragment extends Fragment implements ICommandCallB
 		    .setMessage(message)
 		    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int which) { 
-		            
+		        	unlockScreenOrientation();
 		        }
 		     }).setIconAttribute(android.R.attr.icon).create();
 		     
