@@ -11,7 +11,9 @@ Syslog-ng Monitor for Android is a monitoring application and with this applicat
 After installing the application, You can start the configuring the application by adding the details of Syslog-ng Servers.
 
 Syslog-ng Name : Start by giving the Syslog-ng that you want to monitor a name.
+
 Hostname : Specify the hostname of Syslog-ng Server.
+
 Port number : Specify the port number of the Syslog-ng Server.
 
 ### Optional ###
